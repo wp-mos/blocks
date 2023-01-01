@@ -2,13 +2,10 @@ import { registerBlockType } from "@wordpress/blocks";
 import { useBlockProps, InspectorControls } from "@wordpress/block-editor";
 import { PanelBody, ToggleControl } from "@wordpress/components";
 import { __ } from "@wordpress/i18n";
-import icons from "../../icons.js";
+
 import "./main.css";
 
 registerBlockType("mos-blocks/auth-modal", {
-  icon: {
-    src: icons.primary,
-  },
   edit({ attributes, setAttributes }) {
     const { showRegister } = attributes;
     const blockProps = useBlockProps();

@@ -250,7 +250,7 @@ function _extends() {
   \**************************************/
 /***/ ((module) => {
 
-module.exports = JSON.parse('{"$schema":"https://raw.githubusercontent.com/WordPress/gutenberg/trunk/schemas/json/block.json","apiVersion":2,"name":"mos-blocks/button","title":"Button","category":"text","description":"Button","textdomain":"mos-blocks","editorScript":"file:./button.js","editorStyle":"file:./button.css","style":"file:./style-button.css","attributes":{"text":{"type":"string"},"linkObject":{"type":"object","default":{}},"config":{"type":"string","default":"primary"}}}');
+module.exports = JSON.parse('{"$schema":"https://raw.githubusercontent.com/WordPress/gutenberg/trunk/schemas/json/block.json","apiVersion":2,"name":"mos-blocks/button","title":"Button","category":"mos-category","description":"Button","textdomain":"mos-blocks","editorScript":"file:./button.js","editorStyle":"file:./button.css","style":"file:./style-button.css","attributes":{"text":{"type":"string"},"linkObject":{"type":"object","default":{}},"config":{"type":"string","default":"primary"}}}');
 
 /***/ })
 

@@ -3,7 +3,7 @@
   "apiVersion": 2,
   "name": "mos-blocks/auth-modal",
   "title": "Auth Modal",
-  "category": "text",
+  "category": "mos-category",
   "description": "Adds an authentication modal",
   "textdomain": "mos-blocks",
   "attributes": {

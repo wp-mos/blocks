@@ -3,7 +3,7 @@
   "apiVersion": 2,
   "name": "mos-blocks/button",
   "title": "Button",
-  "category": "text",
+  "category": "mos-category",
   "description": "Button",
   "textdomain": "mos-blocks",
   "editorScript": "file:./button.js",

@@ -3,7 +3,7 @@
   "apiVersion": 2,
   "name": "mos-blocks/auth-link",
   "title": "Auth Link",
-  "category": "text",
+  "category": "mos-category",
   "description": "Adds a header toolbar that contains an authentication link",
   "textdomain": "mos-blocks",
   "attributes": {

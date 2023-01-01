@@ -30,6 +30,9 @@ foreach($allFiles as $filename) {
   include_once($filename);
 }
 
+// Filters
+add_filter('block_categories_all', 'mos_register_category');
+
 // Hooks
 add_action('init', 'mos_register_blocks');
 add_action('rest_api_init', 'mos_rest_api_init');
