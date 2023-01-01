@@ -26,6 +26,7 @@ function mos_auth_link_render_cb($attributes) {
     if($user_logged_in) { ?>
       <div class="dropdown">
         <div class="dropdown-wrapper">
+          <a href="<?php echo esc_url(site_url('/subscriber')) ?>" class="dropdown-item">Contul Meu</a>
           <a href="<?php echo wp_logout_url(home_url()) ?>" class="dropdown-item">Logout</a>
         </di>
       </div>
