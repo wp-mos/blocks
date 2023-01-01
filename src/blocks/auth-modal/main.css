@@ -34,7 +34,6 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 1rem;
 }
 
 /* OVERLAY */
@@ -146,8 +145,8 @@
 
 .wp-block-mos-blocks-auth-modal .modal-btn-close {
   position: absolute;
-  right: 1.5rem;
-  top: 1.6875rem;
+  right: 0.5rem;
+  top: 0.5rem;
   height: 1.5rem;
   width: 1.5rem;
   cursor: pointer;
