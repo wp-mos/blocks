@@ -2,6 +2,7 @@
 
 function mos_register_blocks() {
   $blocks = [
+    [ 'name' => 'button'],
     [ 'name' => 'auth-link', 'options' => [
       'render_callback' => 'mos_auth_link_render_cb'
     ]],
