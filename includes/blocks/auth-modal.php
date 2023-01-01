@@ -1,6 +1,6 @@
 <?php
 
-function mos_auth_modal_render_cb($atts) {
+function mos_auth_modal_render_cb($attributes) {
   if(is_user_logged_in()) {
     return '';
   }
@@ -33,7 +33,7 @@ function mos_auth_modal_render_cb($atts) {
           </li>
           <?php
 
-          if($atts['showRegister']) {
+          if($attributes['showRegister']) {
             ?>
             <!-- Register Tab -->
             <li>
@@ -67,7 +67,7 @@ function mos_auth_modal_render_cb($atts) {
           </form>
           <?php
 
-          if($atts['showRegister']) {
+          if($attributes['showRegister']) {
             ?>
             <!-- Register Form -->
             <form id="signup-tab">
