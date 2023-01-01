@@ -1,6 +1,6 @@
 <?php
 
-function mos_rest_api_signin_handler($request) {
+function mos_rest_api_signin_mos_handler($request) {
   $response = ['status' => 1];
   $params = $request->get_json_params();
 
