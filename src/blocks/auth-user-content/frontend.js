@@ -4,11 +4,13 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
   const contulMeu = document.querySelector("#contul-meu");
+  const schimbaParola = document.querySelector("#schimba-parola");
   const comenzileMele = document.querySelector("#comenzile-mele");
 
   tabs.forEach((currentTab, index) => {
     if (index === 0) {
       currentTab.classList.add("is-active");
+      schimbaParola.style.display = "none";
       comenzileMele.style.display = "none";
     }
   });
@@ -27,9 +29,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (activeTab === "#contul-meu") {
         contulMeu.style.display = "flex";
+        schimbaParola.style.display = "none";
+        comenzileMele.style.display = "none";
+      } else if (activeTab === "#schimba-parola") {
+        contulMeu.style.display = "none";
+        schimbaParola.style.display = "flex";
         comenzileMele.style.display = "none";
       } else {
         contulMeu.style.display = "none";
+        schimbaParola.style.display = "none";
         comenzileMele.style.display = "flex";
       }
     });

@@ -81,11 +81,19 @@
   margin-bottom: 0.5rem;
 }
 
-.wp-block-mos-blocks-auth-user-content-form {
+.wp-block-mos-blocks-auth-user-content-form,
+.wp-block-mos-blocks-auth-user-content-reset-form {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+}
+
+.wp-block-mos-blocks-auth-user-content-form {
   gap: 1.5rem;
+}
+
+.wp-block-mos-blocks-auth-user-content-reset-form {
+  gap: 0;
 }
 
 .form-group-name,
@@ -99,7 +107,8 @@
 .form-group-name,
 .form-group-company,
 .form-group-contact,
-.form-group-address {
+.form-group-address,
+.form-group-reset {
   width: 100%;
 }
 
@@ -145,7 +154,7 @@ input.form-submit {
   text-transform: uppercase;
   border-radius: 6px;
   border-style: none;
-  padding: 0.1875rem 0.75rem;
+  padding: 0.25rem 0.75rem;
   text-align: center;
   background-color: var(--wp--preset--color--primary);
   color: var(--wp--preset--color--on-surface);

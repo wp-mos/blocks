@@ -15,6 +15,7 @@ function mos_auth_user_content_render_cb($attributes) {
 
       <ul class="wp-block-mos-blocks-auth-user-content-sidebar-navigation">
         <li><a href="#contul-meu" class="is-active">Contul meu</a></li>
+        <li><a href="#schimba-parola">Schimba parola</a></li>
         <li><a href="#comenzile-mele">Comenzile Mele</a></li>
       </ul>
 
@@ -68,8 +69,6 @@ function mos_auth_user_content_render_cb($attributes) {
 
           </div>
 
-
-
           <div class="form-group-address">
             <h6 class="small">Adresa</h6>
             <div class="form-block">
@@ -90,6 +89,24 @@ function mos_auth_user_content_render_cb($attributes) {
 
           <input type="submit" value="Update" class="form-submit">
         </form>
+      </div>
+
+      <div id="schimba-parola" class="wp-block-mos-blocks-auth-user-content-content-wrapper">
+        <h6>Schimba Parola</h6>
+
+        <form method="post" action="" class="wp-block-mos-blocks-auth-user-content-reset-form">
+          <div class="form-group-reset">
+           <div>
+              <div class="form-block">
+                <label for="email">Adresa ta de email</label>
+                <input type="email" name="email">
+              </div>
+            </div>
+          </div>
+          <?php wp_nonce_field( 'reset_password', 'nonce_field' ); ?>
+          <input type="submit" value="Trimite e-mail pentru resetarea parolei" class="form-submit">
+        </form>
+
       </div>
 
       <div id="comenzile-mele" class="wp-block-mos-blocks-auth-user-content-content-wrapper">
@@ -139,6 +156,40 @@ function mos_auth_user_content_render_cb($attributes) {
     // Redirect the user back to the form page
     wp_safe_redirect( $_SERVER['REQUEST_URI'] );
     exit;
+  }
+
+  if ( isset( $_POST['email'] ) ) {
+    // Check the nonce to verify that the form submission is valid
+    if ( ! wp_verify_nonce( $_POST['nonce_field'], 'reset_password' ) ) {
+      // The nonce is invalid, so display an error message
+      wp_die( 'Error: Invalid form submission.' );
+    }
+
+    // Get the user by their email address
+    $user = get_user_by( 'email', sanitize_email( $_POST['email'] ) );
+    if ( ! $user ) {
+      // No user was found with the specified email address, so display an error message
+      wp_die( 'Error: No user was found with that email address.' );
+    }
+
+    // Generate a password reset key
+    $reset_key = get_password_reset_key( $user );
+    if ( is_wp_error( $reset_key ) ) {
+      // There was an error generating the password reset key, so display an error message
+      wp_die( 'Error: There was an error generating the password reset key.' );
+    }
+
+    // Build the password reset URL
+    $reset_url = network_site_url( "wp-login.php?action=rp&key=$reset_key&login=" . rawurlencode( $user->user_login ), 'login' );
+
+    // Send the password reset email
+    $to = $user->user_email;
+    $subject = 'Password Reset';
+    $message = "To reset your password, visit the following URL: $reset_url";
+    wp_mail( $to, $subject, $message );
+
+    // Display a message to the user
+    echo 'A password reset email has been sent to your email address.';
   }
 
   $output = ob_get_contents();

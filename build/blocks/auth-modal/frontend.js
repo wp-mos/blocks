@@ -1,1 +1,123 @@
-document.addEventListener("DOMContentLoaded",(()=>{const e=document.querySelectorAll(".open-modal"),t=document.querySelector(".wp-block-mos-blocks-auth-modal"),a=document.querySelectorAll(".modal-overlay, .modal-btn-close");e.forEach((e=>{e.addEventListener("click",(e=>{e.preventDefault(),t.classList.add("modal-show")}))})),a.forEach((e=>{e.addEventListener("click",(e=>{e.preventDefault(),t.classList.remove("modal-show")}))}));const s=document.querySelectorAll(".tabs a"),n=document.querySelector("#signin-tab"),o=document.querySelector("#signup-tab");s.forEach((e=>{e.addEventListener("click",(e=>{e.preventDefault(),s.forEach((e=>{e.classList.remove("active-tab")})),e.currentTarget.classList.add("active-tab"),"#signin-tab"===e.currentTarget.getAttribute("href")?(n.style.display="block",o.style.display="none"):(n.style.display="none",o.style.display="block")}))})),o?.addEventListener("submit",(async e=>{e.preventDefault();const t=o.querySelector("fieldset");t.setAttribute("disabled",!0);const a=o.querySelector("#signup-status");a.innerHTML='\n      <div class="modal-status modal-status-info">\n        Please wait! We are creating your account.\n      </div>\n    ';const s={username:o.querySelector("#su-name").value,email:o.querySelector("#su-email").value,password:o.querySelector("#su-password").value},n=await fetch(mos_auth_rest.signup,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(s)});2===(await n.json()).status?(a.innerHTML='\n        <div class="modal-status modal-status-success">\n          Success! Your account has been created.\n        </div>\n      ',location.reload()):(t.removeAttribute("disabled"),a.innerHTML='\n        <div class="modal-status modal-status-danger">\n          Unable to create account! Please try again later.\n        </div>\n      ')})),n?.addEventListener("submit",(async e=>{e.preventDefault();const t=n.querySelector("fieldset"),a=n.querySelector("#signin-status");t.setAttribute("disabled",!0),a.innerHTML='\n      <div class="modal-status modal-status-info">\n        Please wait! We are logging you in.\n      </div>\n    ';const s={user_login:n.querySelector("#si-email").value,password:n.querySelector("#si-password").value},o=await fetch(mos_auth_rest.signin,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(s)});2===(await o.json()).status?(a.innerHTML='\n        <div class="modal-status modal-status-success">\n          Success! You are now logged in.\n        </div>\n      ',location.reload()):(t.removeAttribute("disabled"),a.innerHTML='\n        <div class="modal-status modal-status-danger">\n          Invalid credentials! Please try again later.\n        </div>\n      ')}))}));
+/******/ (() => { // webpackBootstrap
+var __webpack_exports__ = {};
+/*!*******************************************!*\
+  !*** ./src/blocks/auth-modal/frontend.js ***!
+  \*******************************************/
+document.addEventListener("DOMContentLoaded", () => {
+  const openModalBtn = document.querySelectorAll(".open-modal");
+  const modalEl = document.querySelector(".wp-block-mos-blocks-auth-modal");
+  const modalCloseEl = document.querySelectorAll(".modal-overlay, .modal-btn-close");
+  openModalBtn.forEach(el => {
+    el.addEventListener("click", event => {
+      event.preventDefault();
+      modalEl.classList.add("modal-show");
+    });
+  });
+  modalCloseEl.forEach(el => {
+    el.addEventListener("click", event => {
+      event.preventDefault();
+      modalEl.classList.remove("modal-show");
+    });
+  });
+  const tabs = document.querySelectorAll(".tabs a");
+  const signinForm = document.querySelector("#signin-tab");
+  const signupForm = document.querySelector("#signup-tab");
+  tabs.forEach(tab => {
+    tab.addEventListener("click", event => {
+      event.preventDefault();
+      tabs.forEach(currentTab => {
+        currentTab.classList.remove("active-tab");
+      });
+      event.currentTarget.classList.add("active-tab");
+      const activeTab = event.currentTarget.getAttribute("href");
+      if (activeTab === "#signin-tab") {
+        signinForm.style.display = "block";
+        signupForm.style.display = "none";
+      } else {
+        signinForm.style.display = "none";
+        signupForm.style.display = "block";
+      }
+    });
+  });
+  signupForm?.addEventListener("submit", async event => {
+    event.preventDefault();
+    const signupFieldset = signupForm.querySelector("fieldset");
+    signupFieldset.setAttribute("disabled", true);
+    const signupStatus = signupForm.querySelector("#signup-status");
+    signupStatus.innerHTML = `
+      <div class="modal-status modal-status-info">
+        Please wait! We are creating your account.
+      </div>
+    `;
+    const formData = {
+      username: signupForm.querySelector("#su-name").value,
+      email: signupForm.querySelector("#su-email").value,
+      password: signupForm.querySelector("#su-password").value
+    };
+    const response = await fetch(mos_auth_rest.signup, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(formData)
+    });
+    const responseJSON = await response.json();
+    if (responseJSON.status === 2) {
+      signupStatus.innerHTML = `
+        <div class="modal-status modal-status-success">
+          Success! Your account has been created.
+        </div>
+      `;
+      location.reload();
+    } else {
+      signupFieldset.removeAttribute("disabled");
+      signupStatus.innerHTML = `
+        <div class="modal-status modal-status-danger">
+          Unable to create account! Please try again later.
+        </div>
+      `;
+    }
+  });
+  signinForm?.addEventListener("submit", async event => {
+    event.preventDefault();
+    const signinFieldset = signinForm.querySelector("fieldset");
+    const signinStatus = signinForm.querySelector("#signin-status");
+    signinFieldset.setAttribute("disabled", true);
+    signinStatus.innerHTML = `
+      <div class="modal-status modal-status-info">
+        Please wait! We are logging you in.
+      </div>
+    `;
+    const formData = {
+      user_login: signinForm.querySelector("#si-email").value,
+      password: signinForm.querySelector("#si-password").value
+    };
+    const response = await fetch(mos_auth_rest.signin, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(formData)
+    });
+    console.log(response);
+    const responseJSON = await response.json();
+    if (responseJSON.status === 2) {
+      signinStatus.innerHTML = `
+        <div class="modal-status modal-status-success">
+          Success! You are now logged in.
+        </div>
+      `;
+      location.reload();
+    } else {
+      signinFieldset.removeAttribute("disabled");
+      signinStatus.innerHTML = `
+        <div class="modal-status modal-status-danger">
+          Invalid credentials! Please try again later.
+        </div>
+      `;
+    }
+  });
+});
+/******/ })()
+;
+//# sourceMappingURL=frontend.js.map

@@ -119,6 +119,8 @@ document.addEventListener("DOMContentLoaded", () => {
       body: JSON.stringify(formData),
     });
 
+    console.log(response);
+
     const responseJSON = await response.json();
 
     if (responseJSON.status === 2) {
