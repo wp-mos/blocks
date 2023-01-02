@@ -1,6 +1,6 @@
 <?php
 
-function mos_user_render_cb($attributes) {
+function mos_auth_user_hero_render_cb($attributes) {
   $current_user = wp_get_current_user();
 
   ob_start();
@@ -10,12 +10,12 @@ function mos_user_render_cb($attributes) {
   }
 
   ?>
-
-  <h2><?php echo esc_html( $current_user->user_login) ?></h2>
-  <h6>Email: <?php echo esc_html( $current_user->user_email  )  ?></h6>
+  <div class="wp-block-mos-blocks-auth-user-hero">
+    <h6>Salut,</h6>
+    <h2><?php echo esc_html( $current_user->user_login) ?></h2>
+  </div>
 
   <?php
-
   $output = ob_get_contents();
   ob_end_clean();
   return $output;

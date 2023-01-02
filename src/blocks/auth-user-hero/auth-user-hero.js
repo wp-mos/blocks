@@ -1,6 +1,6 @@
 import { registerBlockType } from "@wordpress/blocks";
 
-import "./user.scss";
+import "./auth-user-hero.scss";
 
 import Edit from "./edit";
 import metadata from "./block.json";

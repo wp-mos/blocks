@@ -3,8 +3,11 @@
 function mos_register_blocks() {
   $blocks = [
     [ 'name' => 'button'],
-    [ 'name' => 'user', 'options' => [
-      'render_callback' => 'mos_user_render_cb'
+    [ 'name' => 'auth-user-hero', 'options' => [
+      'render_callback' => 'mos_auth_user_hero_render_cb'
+    ]],
+    [ 'name' => 'auth-user-content', 'options' => [
+      'render_callback' => 'mos_auth_user_content_render_cb'
     ]],
     [ 'name' => 'auth-link', 'options' => [
       'render_callback' => 'mos_auth_link_render_cb'
