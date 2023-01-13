@@ -22,12 +22,6 @@ function mos_register_blocks(): void {
 			]
 		],
 		[
-			'name'    => 'auth-modal',
-			'options' => [
-				'render_callback' => 'mos_auth_modal_render_cb'
-			]
-		],
-		[
 			'name'    => 'order-form',
 			'options' => [
 				'render_callback' => 'mos_order_block_render_cb'
