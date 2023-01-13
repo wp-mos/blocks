@@ -29,6 +29,54 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
+  // function addFileWrapper(fileWrapper, wrapId) {
+  //   let newWrapper = fileWrapper.cloneNode(true);
+  //   lastWrapperId++;
+  //   initFilesData(lastWrapperId, newWrapper);
+  //   newWrapper.setAttribute("data-filenum", lastWrapperId);
+  //   newWrapper.querySelector(".form-filestatus").innerHTML = "–";
+  //   newWrapper.querySelector(".form-file").value = "";
+  //   newWrapper.querySelector(".form-quantity").value = 1;
+  //   newWrapper.querySelector(".form-size").innerHTML = "–";
+  //   // newWrapper.querySelector('.form-fileid').innerHTML = '–'
+
+  //   fileWrapper
+  //     .querySelector(".col")
+  //     .insertAdjacentHTML(
+  //       "beforeend",
+  //       `<a class="form-del btn btn-outline-dark border-0 w-auto mt-0 position-absolute top-0 end-0" data-id="${wrapId}" href="Javascript:void(0);"><span class="bi-x-lg"></span></a>`
+  //     );
+  //   fileWrapper
+  //     .querySelector(".form-filestatus")
+  //     .insertAdjacentHTML(
+  //       "afterend",
+  //       `<div><div></div><a class="form-calc btn btn-primary btn-sm" title="Recalculate" href="Javascript:void(0);"><span class="bi-arrow-clockwise fs-5"></span></a></div>`
+  //     );
+
+  //   // fileInput = fileWrapper.querySelector(".form-file");
+
+  //   fileName = document.createElement("p");
+  //   fileName.className = "mt-2 mb-0";
+  //   fileName.innerHTML = `<strong>${fileInput.files[0].name}</strong> a fost incarcat cu succes!`;
+  //   fileInput.parentNode.replaceChild(fileName, fileInput);
+  //   fileWrapper
+  //     .querySelector(".form-del")
+  //     .addEventListener("click", (event) => {
+  //       filesData[event.currentTarget.getAttribute("data-id")] = null;
+  //       fileWrapper.parentNode.removeChild(fileWrapper);
+  //       updateForm();
+  //     });
+  //   fileWrapper
+  //     .querySelector(".form-calc")
+  //     .addEventListener("click", (event) => {
+  //       calculatePrice(wrapId);
+  //     });
+  //   addFileWrapperListener(newWrapper, lastWrapperId);
+  //   fileWrapper.parentNode.insertBefore(
+  //     newWrapper,
+  //     fileWrapper.nextElementSibling
+  //   );
+  // }
   function addFileWrapper(fileWrapper, wrapId) {
     let newWrapper = fileWrapper.cloneNode(true);
     lastWrapperId++;
@@ -54,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
     fileInput = fileWrapper.querySelector(".form-file");
     fileName = document.createElement("p");
     fileName.className = "mt-2 mb-0";
-    fileName.innerHTML = `<strong>${fileInput.files[0].name}</strong> a fost incarcat cu succes!`;
+    fileName.innerHTML = fileInput.files[0].name;
     fileInput.parentNode.replaceChild(fileName, fileInput);
     fileWrapper
       .querySelector(".form-del")
