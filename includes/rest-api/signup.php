@@ -1,48 +1,58 @@
 <?php
 
-function mos_rest_api_signup_mos_handler($request) {
-  $response = ['status' => 1];
-  $params = $request->get_json_params();
+function mos_rest_api_signup_mos_handler( $request ): array {
+	$response = [ 'status' => 1 ];
+	$params   = $request->get_json_params();
 
-  if(
-    !isset($params['email'], $params['username'], $params['password']) ||
-    empty($params['email']) ||
-    empty($params['username']) ||
-    empty($params['password'])
-  ) {
-    return $response;
-  }
+	if (
+		! isset( $params['name'], $params['surname'], $params['email'], $params['password'] )
+		|| empty( $params['name'] )
+		|| empty( $params['surname'] )
+		|| empty( $params['email'] )
+		|| empty( $params['password'] )
+	) {
+		return $response;
+	}
 
-  $email = sanitize_email($params['email']);
-  $username = sanitize_text_field($params['username']);
-  $password = sanitize_text_field($params['password']);
+	$name     = sanitize_text_field( $params['name'] );
+	$surname  = sanitize_text_field( $params['surname'] );
+	$username = sanitize_text_field( $params['name'] . '_' . $params['surname'] );
+	$tel      = sanitize_text_field( $params['tel'] );
+	$email    = sanitize_email( $params['email'] );
+	$password = sanitize_text_field( $params['password'] );
 
-  if(
-    username_exists($username) ||
-    !is_email($email) ||
-    email_exists($email)
-  ) {
-    return $response;
-  }
+	if (
+		username_exists( $username ) ||
+		! is_email( $email ) ||
+		email_exists( $email )
+	) {
+		return $response;
+	}
 
-  $userID = wp_insert_user([
-    'user_login' => $username,
-    'user_pass' => $password,
-    'user_email' => $email
-  ]);
+	$user_id = wp_insert_user( [
+		'user_login'           => $username,
+		'user_email'           => $email,
+		'first_name'           => $name,
+		'last_name'            => $surname,
+		'user_pass'            => $password,
+		'show_admin_bar_front' => false
+	] );
 
-  if(is_wp_error($userID)) {
-    return $response;
-  }
+	update_user_meta( $user_id, 'phone', $tel );
 
-  wp_new_user_notification($userID, null, 'user');
-  wp_set_current_user($userID);
-  wp_set_auth_cookie($userID);
+	if ( is_wp_error( $user_id ) ) {
+		return $response;
+	}
 
-  $user = get_user_by('id', $userID);
+	wp_new_user_notification( $user_id, null, 'user' );
+	wp_set_current_user( $user_id );
+	wp_set_auth_cookie( $user_id );
 
-  do_action('wp_login', $user->user_login, $user);
+	$user = get_user_by( 'id', $user_id );
 
-  $response['status'] = 2;
-  return $response;
+	do_action( 'wp_login', $user->user_login, $user );
+
+	$response['status'] = 2;
+
+	return $response;
 }

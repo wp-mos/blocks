@@ -2,10 +2,10 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/blocks/auth-link/main.css":
-/*!***************************************!*\
-  !*** ./src/blocks/auth-link/main.css ***!
-  \***************************************/
+/***/ "./src/blocks/login-form/login-form.css":
+/*!**********************************************!*\
+  !*** ./src/blocks/login-form/login-form.css ***!
+  \**********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -125,9 +125,9 @@ module.exports = window["wp"]["i18n"];
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-/*!***************************************!*\
-  !*** ./src/blocks/auth-link/index.js ***!
-  \***************************************/
+/*!*********************************************!*\
+  !*** ./src/blocks/login-form/login-form.js ***!
+  \*********************************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
@@ -137,23 +137,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _main_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./main.css */ "./src/blocks/auth-link/main.css");
+/* harmony import */ var _login_form_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./login-form.css */ "./src/blocks/login-form/login-form.css");
 
 
 
 
 
-(0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__.registerBlockType)("mos-blocks/auth-link", {
+(0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__.registerBlockType)("mos-blocks/login-form", {
   edit() {
     const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps)();
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", blockProps, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      className: "mos-blocks-sign-in-link open-modal",
-      href: "#"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("CONTUL TĂU", "mos-blocks"))));
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", blockProps, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("This block is not previewable from the editor. View your site for a live demo.", "mos-blocks")));
   }
 });
 })();
 
 /******/ })()
 ;
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=login-form.js.map

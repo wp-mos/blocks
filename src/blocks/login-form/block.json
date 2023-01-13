@@ -1,0 +1,15 @@
+{
+  "$schema": "https://raw.githubusercontent.com/WordPress/gutenberg/trunk/schemas/json/block.json",
+  "apiVersion": 2,
+  "name": "mos-blocks/login-form",
+  "title": "Login Form",
+  "category": "mos-category",
+  "description": "Add user login form to a custom login page",
+  "textdomain": "mos-blocks",
+  "attributes": {},
+  "editorScript": "file:./login-form.js",
+  "style": "file:./login-form.css",
+  "script": "file:./frontend.js"
+}
+
+

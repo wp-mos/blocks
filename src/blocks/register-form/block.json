@@ -1,0 +1,15 @@
+{
+  "$schema": "https://raw.githubusercontent.com/WordPress/gutenberg/trunk/schemas/json/block.json",
+  "apiVersion": 2,
+  "name": "mos-blocks/register-form",
+  "title": "Register Form",
+  "category": "mos-category",
+  "description": "Add user register form to a custom register page",
+  "textdomain": "mos-blocks",
+  "attributes": {},
+  "editorScript": "file:./register-form.js",
+  "style": "file:./register-form.css",
+  "script": "file:./frontend.js"
+}
+
+
