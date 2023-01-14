@@ -25,7 +25,7 @@ function mos_order_block_render_cb( $attributes ): false|string {
             </div>
           </div>
 
-          <div class="form-block form-block-select-material hidden">
+          <div class="form-block form-block-select-material disabled">
             <div class="form-block-header">
               <span>2</span>
               <h6>Alege Materialul</h6>
@@ -38,7 +38,7 @@ function mos_order_block_render_cb( $attributes ): false|string {
             </div>
           </div>
 
-          <div class="form-block form-block-quantity hidden">
+          <div class="form-block form-block-quantity disabled">
             <div class="form-block-header">
               <span>3</span>
               <h6>Selecteaza Cantitatea</h6>
@@ -50,20 +50,30 @@ function mos_order_block_render_cb( $attributes ): false|string {
             </div>
           </div>
 
-          <div class="form-block-a form-block-details">
-            <div class="form-block-header form-block-header-price">
-              <div class="form-block-header-title-price">TOTAL DESIGN</div>
-              <div class="form-block-header-price-size">
-                <div>Dimensions (mm):</div>
-                <div class="form-size mt-3">-</div>
-                <div>Price:</div>
-                <div class="form-filestatus">-</div>
+          <div class="form-block-details hide">
+              <div class="form-block-details-title">Item 1</div>
+              <div class="form-block-details-body">
+                <div class="form-block-details-dimensions">
+                  <div>Dimensions (mm):</div>
+                  <div class="form-size">-</div>
+                </div>
+                <div class="form-block-details-price">
+                  <div>Price:</div>
+                  <div class="form-filestatus">-</div>
+                </div>
               </div>
-            </div>
+              </div>
           </div>
         </div>
       </div>
-      <p class="ms-3 mt-4">Total price: <strong id="order-price">–</strong></p>
+
+      <input type="submit" value="Upload">
+
+      <div class="form-price hide">
+        <div class="form-price-wrapper">
+          <span class="title">Total price:</span> <span id="order-price" class="total-price">–</span>
+        </div>
+      </div>
     </form>
 
   </div>

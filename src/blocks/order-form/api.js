@@ -1,60 +1,15 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // TODO check valid
-  let totalPrice = null
-  let customer = []
-  let filesData = []
-  let lastWrapperId = 0
-  let totalPriceElm = null
+  let totalPrice = null;
+  let filesData = [];
+  let lastWrapperId = 0;
+  let totalPriceElm = null;
 
-  const loader = '…'
-  const formGroup = document.querySelector('.form-group');
-  const apiUrl = 'https://lasercut.internetguru.io/api/v2/analyze?id=mos';
+  const loader = "…";
+  const formGroup = document.querySelector(".form-group");
+  const apiUrl = "https://lasercut.internetguru.io/api/v2/analyze?id=mos";
 
-  function addFileGroupListener(formGroup, fileGroupId) {
-    formGroup.addEventListener('change', (event) => {
-      calculatePrice(fileGroupId)
-    })
-    formGroup.querySelector(".form-quantity").addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') {
-        calculatePrice(fileGroupId)
-        event.preventDefault()
-      }
-      if (event.keyCode == 9) {
-        calculatePrice(fileGroupId)
-      }
-    })
-  }
-
-  function addFileWrapper(formGroup, fileGroupId) {
-    let newWrapper = formGroup.cloneNode(true)
-    lastWrapperId++
-    initFilesData(lastWrapperId, newWrapper)
-    newWrapper.setAttribute('data-filenum', lastWrapperId)
-    newWrapper.querySelector('.form-filestatus').innerHTML = '–'
-    newWrapper.querySelector(".form-file").value = ''
-    newWrapper.querySelector(".form-quantity").value = 1
-    newWrapper.querySelector(".form-size").innerHTML = '–'
-    // newWrapper.querySelector('.form-fileid').innerHTML = '–'
-    formGroup.querySelector('.form-wrapper').insertAdjacentHTML('beforeend', `<a class="form-del btn btn-outline-dark border-0 w-auto mt-0 position-absolute top-0 end-0" data-id="${fileGroupId}" href="Javascript:void(0);"><span class="bi-x-lg"></span></a>`)
-    formGroup.querySelector('.form-filestatus').insertAdjacentHTML('afterend', `<div><div></div><a class="form-calc btn btn-primary btn-sm" title="Recalculate" href="Javascript:void(0);"><span class="bi-arrow-clockwise fs-5"></span></a></div>`)
-    fileInput = formGroup.querySelector(".form-file")
-    fileName = document.createElement('p')
-    fileName.className = "mt-2 mb-0"
-    fileName.innerHTML = fileInput.files[0].name
-    fileInput.parentNode.replaceChild(fileName, fileInput)
-    formGroup.querySelector('.form-del').addEventListener('click', (event) => {
-      filesData[event.currentTarget.getAttribute('data-id')] = null
-      formGroup.parentNode.removeChild(formGroup)
-      updateForm()
-    })
-    formGroup.querySelector(".form-calc").addEventListener('click', (event) => {
-      calculatePrice(fileGroupId)
-    })
-    addFileGroupListener(newWrapper, lastWrapperId)
-    formGroup.parentNode.insertBefore(newWrapper, formGroup.nextElementSibling)
-  }
-
-  function initFilesData(formGroupId, formGroup) {
+  // UTILS
+  const initFilesData = (formGroupId, formGroup) => {
     filesData[formGroupId] = {
       formGroup: formGroup,
       status: null,
@@ -69,160 +24,323 @@ document.addEventListener("DOMContentLoaded", () => {
       productPrice: null,
       addedWrapper: false,
       valid: false,
-    }
-  }
+    };
+  };
 
-  function formatPrice(num) {
-    return num.toLocaleString('cs-CZ')
-  }
+  const formatPrice = (num) => {
+    return num.toLocaleString();
+  };
 
-  function formatSize(num) {
+  const formatSize = (num) => {
     return Math.round(num);
-    //return num.replace(/\..*$/, '')
-  }
+  };
 
-  function updateForm(fileGroupId) {
-    totalPrice = 0
-    filesData.forEach((file) => {
-      if (file == null || file.prices == null) {
-        return
-      }
-      if (fileGroupId !== undefined && fileGroupId == file.formGroup.getAttribute('data-filenum')) {
-        file.status.innerHTML = loader
-      }
-      var materialSelect = file.formGroup.querySelector('.form-material')
-      if (materialSelect.children.length == 1) {
-        materialSelect.innerHTML = ''
-        file.prices.forEach((priceData) => {
-          var option = document.createElement('option')
-          option.value = priceData.material_id
-          option.innerHTML = `${priceData.material_name}`
-          option.setAttribute('data-name', priceData.material_name)
-          materialSelect.appendChild(option)
-        })
-      }
-      var quantity = file.formGroup.querySelector('.form-quantity').value
-      var price = file.prices[materialSelect.selectedIndex].unit_price
-        * quantity + file.prices[materialSelect.selectedIndex].fix_price
-      setTimeout(() => {
-        file.status.innerHTML = `${formatPrice(price)} €`
-      }, 400)
-      width = formatSize(file.fileWidth)
-      height = formatSize(file.fileHeight)
-      file.formGroup.querySelector('.form-size').innerHTML = `${width} × ${height}`
-      file.productPrice = price
-      totalPrice += price
-      file.material = materialSelect[materialSelect.selectedIndex].getAttribute('data-name')
-    })
-    totalPriceElm.innerHTML = `${formatPrice(totalPrice)} €`
-  }
-
-  function getValidFilesCnt() {
-    cnt = 0
+  const getValidFilesCnt = () => {
+    cnt = 0;
     filesData.forEach((file) => {
       if (file == null) {
-        return
+        return;
       }
       if (!file.valid) {
-        return
+        return;
       }
-      cnt++
-    })
-    return cnt
-  }
+      cnt++;
+    });
+    return cnt;
+  };
 
-  function calculatePrice(fileGroupId) {
-    const formGroup = filesData[fileGroupId].formGroup
-    const fileInputElement = formGroup.querySelector(".form-file")
-    const material = formGroup.querySelector(".form-material").value
-    const materialName = formGroup.querySelector(".form-material").selectedOptions[0].text
-    const quantity = formGroup.querySelector(".form-quantity").value
-    const status = formGroup.querySelector('.form-filestatus')
-    let file = null
+  // FRONTEND
+  const toggleFormBlocks = (formBlocks) => {
+    formBlocks.forEach((formBlock, index) => {
+      const formBlockHeader = formBlock.querySelector(".form-block-header");
+
+      let isOpen = false;
+
+      index === 0 ? (isOpen = true) : (isOpen = false);
+
+      formBlockHeader.addEventListener("click", (event) => {
+        event.preventDefault();
+
+        formBlocks.forEach((block) => {
+          isOpen = false;
+          block.classList.add("disabled");
+        });
+
+        !isOpen
+          ? formBlock.classList.remove("disabled")
+          : formBlock.classList.add("disabled");
+        isOpen = !isOpen;
+      });
+    });
+  };
+
+  const initFormBlocks = (formGroup) => {
+    const formBlocks = formGroup.querySelectorAll(".form-block");
+    const formFile = formGroup.querySelector(".form-file");
+    const formSelect = formGroup.querySelector(".form-select");
+
+    const el = [];
+
+    // init
+    formBlocks.forEach((formBlock, index) => {
+      if (index !== 0) {
+        formBlock.classList.add("disabled");
+      } else {
+        el.push(formBlocks[0]);
+        toggleFormBlocks(el);
+      }
+    });
+
+    const closeAllFormBlocks = () => {
+      formBlocks.forEach((formBlock) => {
+        formBlock.classList.add("disabled");
+      });
+    };
+
+    const openFormBlock = (id) => {
+      formBlocks.forEach((formBlock, index) => {
+        if (index === id) {
+          formBlock.classList.remove("disabled");
+        }
+      });
+    };
+
+    formFile.addEventListener("change", (event) => {
+      if (event) {
+        closeAllFormBlocks();
+        openFormBlock(1);
+        el.push(formBlocks[1]);
+        toggleFormBlocks(el);
+      }
+    });
+
+    formSelect.addEventListener("change", (event) => {
+      if (event) {
+        closeAllFormBlocks();
+        openFormBlock(2);
+        el.push(formBlocks[2]);
+        toggleFormBlocks(el);
+      }
+    });
+  };
+
+  // FORM GROUP LISTENER
+  const addFileGroupListener = (formGroup, fileGroupId) => {
+    formGroup.addEventListener("change", (event) => {
+      calculatePrice(fileGroupId);
+    });
+    initFormBlocks(formGroup, fileGroupId);
+    formGroup
+      .querySelector(".form-quantity")
+      .addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          calculatePrice(fileGroupId);
+          event.preventDefault();
+        }
+        if (event.keyCode == 9) {
+          calculatePrice(fileGroupId);
+        }
+      });
+  };
+
+  const addFormGroup = (formGroup, fileGroupId) => {
+    let newWrapper = formGroup.cloneNode(true);
+    lastWrapperId++;
+    initFilesData(lastWrapperId, newWrapper);
+    newWrapper.setAttribute("data-filenum", lastWrapperId);
+    newWrapper.querySelector(".form-filestatus").innerHTML = "–";
+    newWrapper.querySelector(".form-file").value = "";
+    newWrapper.querySelector(".form-quantity").value = 1;
+    newWrapper.querySelector(".form-size").innerHTML = "–";
+    formGroup.querySelector(".form-wrapper").insertAdjacentHTML(
+      "beforeend",
+      `<a class="form-del" data-id="${fileGroupId}" href="Javascript:void(0);">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 18L18 6" stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M18 18L6 6" stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>`
+    );
+    fileInput = formGroup.querySelector(".form-file");
+    fileName = document.createElement("p");
+    fileName.className = "mt-2 mb-0";
+    fileName.innerHTML = fileInput.files[0].name;
+    fileInput.parentNode.replaceChild(fileName, fileInput);
+    formGroup.querySelector(".form-del").addEventListener("click", (event) => {
+      filesData[event.currentTarget.getAttribute("data-id")] = null;
+      formGroup.parentNode.removeChild(formGroup);
+      updateForm();
+    });
+    addFileGroupListener(newWrapper, lastWrapperId);
+    formGroup.parentNode.insertBefore(newWrapper, formGroup.nextElementSibling);
+  };
+
+  const updateForm = (fileGroupId) => {
+    totalPrice = 0;
+    filesData.forEach((file) => {
+      if (file == null || file.prices == null) {
+        return;
+      }
+      if (
+        fileGroupId !== undefined &&
+        fileGroupId == file.formGroup.getAttribute("data-filenum")
+      ) {
+        file.status.innerHTML = loader;
+      }
+      var materialSelect = file.formGroup.querySelector(".form-material");
+      if (materialSelect.children.length == 1) {
+        materialSelect.innerHTML = "";
+        file.prices.forEach((priceData) => {
+          var option = document.createElement("option");
+          option.value = priceData.material_id;
+          option.innerHTML = `${priceData.material_name}`;
+          option.setAttribute("data-name", priceData.material_name);
+          materialSelect.appendChild(option);
+        });
+      }
+      var quantity = file.formGroup.querySelector(".form-quantity").value;
+      var price =
+        file.prices[materialSelect.selectedIndex].unit_price * quantity +
+        file.prices[materialSelect.selectedIndex].fix_price;
+      setTimeout(() => {
+        file.status.innerHTML = `${formatPrice(price)} RON`;
+      }, 400);
+      width = formatSize(file.fileWidth);
+      height = formatSize(file.fileHeight);
+      file.formGroup.querySelector(
+        ".form-size"
+      ).innerHTML = `${width} × ${height}`;
+
+      // show form details
+      file.formGroup
+        .querySelector(".form-block-details")
+        .classList.remove("hide");
+
+      // add file name as title
+      file.formGroup.querySelector(
+        ".form-block-details-title"
+      ).innerHTML = `${file.file.name}`;
+
+      // show total price
+      document.querySelector(".form-price").classList.remove("hide");
+
+      file.productPrice = price;
+      totalPrice += price;
+      file.material =
+        materialSelect[materialSelect.selectedIndex].getAttribute("data-name");
+    });
+    totalPriceElm.innerHTML = `${formatPrice(totalPrice)} RON`;
+  };
+
+  const calculatePrice = (fileGroupId) => {
+    const formGroup = filesData[fileGroupId].formGroup;
+    const fileInputElement = formGroup.querySelector(".form-file");
+    const material = formGroup.querySelector(".form-material").value;
+    const materialName =
+      formGroup.querySelector(".form-material").selectedOptions[0].text;
+    const quantity = formGroup.querySelector(".form-quantity").value;
+    const status = formGroup.querySelector(".form-filestatus");
+    let file = null;
     if (filesData[fileGroupId].file == null) {
       if (!fileInputElement.value) {
-        status.innerHTML = 'Choose file'
-        return false
+        status.innerHTML = "Choose file";
+        return false;
       }
-      file = fileInputElement.files[0]
+      file = fileInputElement.files[0];
     } else {
-      file = filesData[fileGroupId].file
+      file = filesData[fileGroupId].file;
     }
     if (quantity < 1 || quantity > 100) {
-      status.innerHTML = 'Quantity must be between 1 and 100'
-      return false
+      status.innerHTML = "Quantity must be between 1 and 100";
+      return false;
     }
-    const fileName = file.name
-    const lastMod = file.lastModified + fileName
-    filesData[fileGroupId].quantity = quantity
+    const fileName = file.name;
+    const lastMod = file.lastModified + fileName;
+    filesData[fileGroupId].quantity = quantity;
     if (filesData[fileGroupId].lastMod !== lastMod) {
-      filesData[fileGroupId].status = status
-      filesData[fileGroupId].material = materialName
-      filesData[fileGroupId].lastMod = lastMod
-      var form = new FormData()
-      form.append("material", material)
-      form.append("amount", quantity)
-      if (filesData[fileGroupId].valid && filesData[fileGroupId].fileHash !== null) {
-        form.append("hash", filesData[fileGroupId].fileHash)
+      filesData[fileGroupId].status = status;
+      filesData[fileGroupId].material = materialName;
+      filesData[fileGroupId].lastMod = lastMod;
+      var form = new FormData();
+      form.append("material", material);
+      form.append("amount", quantity);
+      if (
+        filesData[fileGroupId].valid &&
+        filesData[fileGroupId].fileHash !== null
+      ) {
+        form.append("hash", filesData[fileGroupId].fileHash);
       } else {
-        form.append("dxf_file", file, fileName)
+        form.append("dxf_file", file, fileName);
       }
-      status.innerHTML = loader
+      status.innerHTML = loader;
+
       fetch(apiUrl, {
-        method: 'post',
-        body: form
+        method: "post",
+        body: form,
       })
         .then((response) => {
           if (response.ok) {
             return response.json();
           }
-          return response.json().then(text => {
-            throw new Error(text.message)
-          })
+          return response.json().then((text) => {
+            throw new Error(text.message);
+          });
         })
         .then((result) => {
-          filesData[fileGroupId].prices = result.prices
-          filesData[fileGroupId].materialPrices = result.prices
-          filesData[fileGroupId].fileHash = result.file_hash
-          filesData[fileGroupId].fileURL = result.filew_path
-          filesData[fileGroupId].fileWidth = result.model_width
-          filesData[fileGroupId].fileHeight = result.model_height
-          filesData[fileGroupId].file = file
-          filesData[fileGroupId].valid = true
+          filesData[fileGroupId].prices = result.prices;
+          filesData[fileGroupId].materialPrices = result.prices;
+          filesData[fileGroupId].fileHash = result.file_hash;
+          filesData[fileGroupId].fileURL = result.filew_path;
+          filesData[fileGroupId].fileWidth = result.model_width;
+          filesData[fileGroupId].fileHeight = result.model_height;
+          filesData[fileGroupId].file = file;
+          filesData[fileGroupId].valid = true;
           if (!filesData[fileGroupId].addedWrapper) {
-            addFileWrapper(formGroup, fileGroupId)
-            filesData[fileGroupId].addedWrapper = true
+            addFormGroup(formGroup, fileGroupId);
+            filesData[fileGroupId].addedWrapper = true;
           }
-          updateForm(fileGroupId)
+          updateForm(fileGroupId);
         })
         .catch((error) => {
-          alert(error)
-          status.innerHTML = '–'
-          filesData[fileGroupId].lastMod = null
-          filesData[fileGroupId].valid = false
-        })
-      return
+          alert(error);
+          status.innerHTML = "–";
+          filesData[fileGroupId].lastMod = null;
+          filesData[fileGroupId].valid = false;
+        });
+      return;
     }
-    filesData[fileGroupId].material = quantity
-    filesData[fileGroupId].material = materialName
-    updateForm(fileGroupId)
-    filesData[fileGroupId].valid = true
+    filesData[fileGroupId].material = quantity;
+    filesData[fileGroupId].material = materialName;
+    updateForm(fileGroupId);
+    filesData[fileGroupId].valid = true;
+  };
+
+  function saveFormData(form) {
+    const formData = new FormData(form);
+    for (let [name, value] of formData) {
+      var label = document.querySelector(`label[for="${name}"]`).innerHTML;
+      customer.push({ key: name, value: value, label: label });
+      const varname = document
+        .getElementById(name)
+        .getAttribute("data-varname");
+      if (varname) {
+        window[varname] = value;
+      }
+    }
+    console.log(formData);
   }
-  
-  initFilesData(0, formGroup)
-  totalPriceElm = document.getElementById("order-price")
-  addFileGroupListener(formGroup, 0)
-  formGroup.addEventListener('submit', (event) => {
-    event.preventDefault()
+
+  initFilesData(0, formGroup);
+  totalPriceElm = document.getElementById("order-price");
+  addFileGroupListener(formGroup, 0);
+  formGroup.addEventListener("submit", (event) => {
+    event.preventDefault();
     if (getValidFilesCnt() == 0) {
-      // TODO highlight error
-      return false
+      return false;
     }
-    var msg = document.querySelector('.status-message')
+    var msg = document.querySelector(".status-message");
     if (msg) {
-      msg.parentNode.removeChild(msg)
+      msg.parentNode.removeChild(msg);
     }
-  })
-  document.querySelector('.form-placeholder').style.display = 'none';
-  document.querySelector('.form-placeholder + form').style.display = 'block';
+  });
 });

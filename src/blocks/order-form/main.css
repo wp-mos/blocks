@@ -3,11 +3,10 @@
 }
 
 .mos-order-form .form-wrapper {
+  position: relative;
   display: flex;
   flex-direction: column;
-  /*gap: 6rem;*/
   padding: 3rem;
-  width: 100%;
   border-radius: 6px;
   background-color: #f9f7f1;
 }
@@ -34,7 +33,6 @@
 .mos-order-form .form-block .form-block-header h6 {
   font-size: var(--wp--preset--font-size--title-small);
   margin: 0;
-
 }
 
 .mos-order-form .form-block .form-block-header > span {
@@ -74,15 +72,84 @@
 }
 
 /* Form Block Accordion */
+.form-block {
+  opacity: 1;
+  transition: all cubic-bezier(0.4, 0, 0.2, 1) 0.15s;
+}
+
 .form-block .form-block-body {
   visibility: visible;
   opacity: 1;
   transition: all cubic-bezier(0.4, 0, 0.2, 1) 0.15s;
 }
 
-.form-block.hidden .form-block-body {
+.form-block.disabled .form-block-body {
   height: 0;
   visibility: hidden;
   padding: 0;
   opacity: 0;
+}
+
+.form-block-details {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: var(--wp--preset--color--primary-container);
+  border-radius: 6px;
+  color: var(--wp--preset--color--on-primary-container);
+}
+
+.form-block-details-body {
+  display: flex;
+  gap: 3rem;
+}
+
+.form-block-details-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.form-block-details-dimensions,
+.form-block-details-price {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.form-block-details-dimensions .form-size,
+.form-block-details-price .form-filestatus {
+  font-weight: 700;
+}
+
+.form-block-details.hide {
+  display: none;
+}
+
+.form-del {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.form-price.hide {
+  display: none;
+}
+
+.form-price .form-price-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 3rem;
+  border-radius: 6px;
+  color: var(--wp--preset--color--on-primary);
+  background-color: var(--wp--preset--color--primary);
+}
+
+.form-price-wrapper .title {
+  font-size: 18px;
+}
+
+.form-price-wrapper .total-price {
+  font-size: 18px;
+  font-weight: 700;
 }
