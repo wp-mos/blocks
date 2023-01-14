@@ -5,18 +5,15 @@ var __webpack_exports__ = {};
   \*******************************************/
 document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("login-form");
+  const emailInput = document.getElementById("login-form-email");
+  const passwordInput = document.getElementById("login-form-password");
+  const loginStatus = document.getElementById("login-status");
   loginForm?.addEventListener("submit", async event => {
     event.preventDefault();
-    const loginStatus = loginForm.querySelector("#login-status");
     const formData = {
-      user_login: loginForm.querySelector("#si-email").value,
-      password: loginForm.querySelector("#si-password").value
+      user_login: emailInput.value,
+      password: passwordInput.value
     };
-    loginStatus.innerHTML = `
-      <div class="modal-status modal-status-info">
-        Please wait! We are logging you in.
-      </div>
-    `;
     const response = await fetch(mos_auth_rest.signin, {
       method: "POST",
       headers: {
@@ -24,22 +21,14 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       body: JSON.stringify(formData)
     });
-    console.log(response);
     const responseJSON = await response.json();
     if (responseJSON.status === 2) {
-      loginStatus.innerHTML = `
-        <div class="modal-status modal-status-success">
-          Success! You are now logged in.
-        </div>
-      `;
-      location.reload();
+      location.replace('http://mos.local/utilizatori/comanda/');
     } else {
-      // signinFieldset.removeAttribute("disabled");
-      loginStatus.innerHTML = `
-        <div class="modal-status modal-status-danger">
-          Invalid credentials! Please try again later.
-        </div>
-      `;
+      loginStatus.innerHTML = "Email sau parolă incorectă!";
+      loginStatus.classList.add('padding');
+      emailInput.classList.add('error');
+      passwordInput.classList.add('error');
     }
   });
 });

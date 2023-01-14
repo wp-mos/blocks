@@ -14,7 +14,7 @@
   text-decoration: none;
   border-radius: 6px;
   border-style: none;
-  padding: 0.1875rem 0.75rem;
+  padding: 0.25rem 0.75rem;
   text-align: center;
   background-color: var(--wp--preset--color--primary);
   color: var(--wp--preset--color--on-surface);
@@ -63,7 +63,7 @@
 .dropdown a {
   font-size: .875rem;
   line-height: 1.5rem;
-  padding: 0.1875rem 0.75rem;
+  padding: 0.25rem 0.75rem;
   text-decoration: none;
   cursor: pointer;
   color: var(--wp--preset--color--on-surface);

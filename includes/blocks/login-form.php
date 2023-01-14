@@ -10,14 +10,26 @@ function mos_login_form(): false|string {
   <div class="wp-block-mos-blocks-login-form">
     <!-- sof: login form -->
     <form id="login-form" class="login-form">
-      <div id="login-status"></div>
-      <label>Email</label>
-      <input type="text" id="si-email" placeholder="Email"/>
+      <div id="login-status" class="login-status"></div>
 
-      <label>Parola</label>
-      <input type="password" id="si-password" placeholder="Parola"/>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="text" id="login-form-email" placeholder="Email"/>
+      </div>
 
-      <button type="submit">Intră în cont</button>
+      <div class="form-group">
+        <label>Parola</label>
+        <input type="password" id="login-form-password" placeholder="Parola"/>
+      </div>
+
+      <div class="form-footer">
+        <div class="form-footer-meta">
+          Nu ai inca cont?
+          <a class="animated-link" href="<?php echo site_url( '/utilizatori/inregistrare' ) ?>">Inregistreza-te</a>
+        </div>
+        <button class="form-subscribe-button" type="submit">Intră în cont</button>
+      </div>
+
     </form>
     <!-- eof: login form -->
   </div>
