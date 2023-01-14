@@ -14,12 +14,12 @@ function mos_login_form(): false|string {
 
       <div class="form-group">
         <label>Email</label>
-        <input type="text" id="login-form-email" placeholder="Email"/>
+        <input type="text" id="login-form-email" class="form-input" placeholder="Email"/>
       </div>
 
       <div class="form-group">
         <label>Parola</label>
-        <input type="password" id="login-form-password" placeholder="Parola"/>
+        <input type="password" id="login-form-password" class="form-input" placeholder="Parola"/>
       </div>
 
       <div class="form-footer">

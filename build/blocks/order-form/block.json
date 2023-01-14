@@ -14,5 +14,8 @@
   },
   "editorScript": "file:./index.js",
   "style": "file:./index.css",
-  "script": "file:./frontend.js"
+  "script": [
+    "file:./api.js",
+    "file:./frontend.js"
+  ]
 }
