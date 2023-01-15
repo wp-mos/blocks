@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const loader = "…";
   const formGroup = document.querySelector(".form-group");
   const apiUrl = "https://lasercut.internetguru.io/api/v2/analyze?id=mos";
+  const orderForm = document.getElementById("mos-order-form");
 
   // UTILS
   const initFilesData = (formGroupId, formGroup) => {
@@ -91,6 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
       formBlocks.forEach((formBlock, index) => {
         if (index === id) {
           formBlock.classList.remove("disabled");
+          console.log("disabled block", id);
         }
       });
     };
@@ -117,6 +119,13 @@ document.addEventListener("DOMContentLoaded", () => {
     formGroup.addEventListener("change", event => {
       calculatePrice(fileGroupId);
     });
+
+    // const a = formGroup.querySelector(".form-group-add");
+    // a.addEventListener("click", (event) => {
+    //   event.preventDefault;
+    //   addFormGroup(formGroup, fileGroupId);
+    // });
+
     initFormBlocks(formGroup, fileGroupId);
     formGroup.querySelector(".form-quantity").addEventListener("keydown", event => {
       if (event.key === "Enter") {
@@ -193,6 +202,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // show total price
       document.querySelector(".form-price").classList.remove("hide");
+
+      // show submit
+      document.querySelector(".form-submit-button").classList.remove("hide");
       file.productPrice = price;
       totalPrice += price;
       file.material = materialSelect[materialSelect.selectedIndex].getAttribute("data-name");
@@ -256,7 +268,7 @@ document.addEventListener("DOMContentLoaded", () => {
         filesData[fileGroupId].file = file;
         filesData[fileGroupId].valid = true;
         if (!filesData[fileGroupId].addedWrapper) {
-          addFormGroup(formGroup, fileGroupId);
+          // addFormGroup(formGroup, fileGroupId);
           filesData[fileGroupId].addedWrapper = true;
         }
         updateForm(fileGroupId);
@@ -277,17 +289,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const formData = new FormData(form);
     for (let [name, value] of formData) {
       var label = document.querySelector(`label[for="${name}"]`).innerHTML;
-      customer.push({
-        key: name,
-        value: value,
-        label: label
-      });
+      // customer.push({ key: name, value: value, label: label });
       const varname = document.getElementById(name).getAttribute("data-varname");
       if (varname) {
         window[varname] = value;
       }
     }
-    console.log(formData);
   }
   initFilesData(0, formGroup);
   totalPriceElm = document.getElementById("order-price");
@@ -301,6 +308,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (msg) {
       msg.parentNode.removeChild(msg);
     }
+  });
+  orderForm.addEventListener("submit", event => {
+    event.preventDefault();
+    const formData = new FormData(orderForm);
+    filesData.forEach(data => {
+      formData.append("price", data.productPrice);
+    });
+    console.log(formData);
   });
 });
 /******/ })()

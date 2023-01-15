@@ -40,4 +40,5 @@ add_action( 'wp_enqueue_scripts', 'mos_enqueue_scripts' );
 add_action( 'admin_init', 'mos_redirect_subscribers_to_frontend' );
 add_action( 'wp_loaded', 'mos_hide_admin_bar' );
 add_action( 'template_redirect', 'mos_redirect_if_not_logged_in' );
+add_action( 'template_redirect', 'mos_redirect_if_logged_in' );
 add_action( 'template_redirect', 'mos_redirects' );
