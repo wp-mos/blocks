@@ -357,7 +357,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  orderForm.addEventListener("submit", (event) => {
+  orderForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     const formData = new FormData(orderForm);
@@ -365,6 +365,32 @@ document.addEventListener("DOMContentLoaded", () => {
     filesData.forEach((data) => {
       formData.append("price", data.productPrice);
     });
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", mos_auth_rest.order);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          var response = JSON.parse(xhr.responseText);
+          console.log(response);
+        } else {
+          console.log("error");
+        }
+      }
+    };
+    xhr.send(formData);
+
+    // const response = await fetch(mos_auth_rest.order, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(formData),
+    // });
+
+    // const responseJSON = await response.json();
+
+    // console.log(responseJSON);
 
     console.log(formData);
   });

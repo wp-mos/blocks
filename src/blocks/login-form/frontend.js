@@ -23,13 +23,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const responseJSON = await response.json();
 
     if (responseJSON.status === 2) {
-      location.replace('http://mos.local/utilizatori/comanda/');
+      location.replace("http://mos.local/utilizatori/comanda/");
     } else {
-      loginStatus.innerHTML = "Email sau parolă incorectă!"
-      loginStatus.classList.add('padding');
+      loginStatus.innerHTML = "Email sau parolă incorectă!";
+      loginStatus.classList.add("padding");
 
-      emailInput.classList.add('error');
-      passwordInput.classList.add('error');
+      emailInput.classList.add("error");
+      passwordInput.classList.add("error");
     }
   });
 });

@@ -10,7 +10,7 @@ function mos_order_block_render_cb( $attributes ): false|string {
       <span>Poor internet connection.</span>
     </div>
 
-    <form id="mos-order-form" class="mos-order-form">
+    <form id="mos-order-form" class="mos-order-form" enctype="multipart/form-data" method="post">
       <div class="form-group" data-filenum="0">
         <div class="form-wrapper">
 
@@ -83,6 +83,7 @@ function mos_order_block_render_cb( $attributes ): false|string {
 
       <div class="form-submit hide" >
         <div class="form-submit-wrapper">
+          <input type="hidden" name="action" value="add_product_to_cart">
           <input class="form-submit-button form-subscribe-button hide" type="submit" value="Proceseaza Comanda">
         </div>
       </div>
