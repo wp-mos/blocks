@@ -43,6 +43,3 @@ add_action( 'wp_loaded', 'mos_hide_admin_bar' );
 add_action( 'template_redirect', 'mos_redirect_if_not_logged_in' );
 add_action( 'template_redirect', 'mos_redirect_if_logged_in' );
 add_action( 'template_redirect', 'mos_redirects' );
-
-add_action( 'admin_post_nopriv_add_product_to_cart', 'add_product_to_cart' );
-add_action( 'admin_post_add_product_to_cart', 'add_product_to_cart' );

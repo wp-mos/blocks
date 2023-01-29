@@ -15,7 +15,7 @@ function mos_order_block_render_cb( $attributes ): false|string {
         <div class="form-wrapper">
 
           <div class="form-block form-block-load-design">
-            <div class="form-block-header">
+            <div id="0" class="form-block-header">
               <span>1</span>
               <h6>Incarca Designul</h6>
             </div>
@@ -27,32 +27,34 @@ function mos_order_block_render_cb( $attributes ): false|string {
                 <path d="M6.75 9.75H11.25M9 12L9 7.5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
                 Upload DXF File</label>
-              <input type="file" id="fileToUpload" class="form-control form-file" name="fileToUpload" required="">
+              <input type="file" id="fileToUpload" class="form-control form-file" name="fileToUpload" data-id="0" required="">
             </div>
           </div>
 
           <div class="form-block form-block-select-material disabled">
-            <div class="form-block-header">
+            <div id="1" class="form-block-header">
               <span>2</span>
               <h6>Alege Materialul</h6>
             </div>
             <div class="form-block-body">
-              <label class="form-label" for="material">Material</label>
-              <select class="form-select form-material" name="material" required="">
+              <!-- <div class="form-search">
+                <input type="text" class="form-select form-material form-input" placeholder="Alege un material">
+                <div class="form-search-dropdown hide"></div>
+              </div> -->
+              <select id="material" class="form-select form-material" name="material" required="" data-id="1">
                 <option selected="selected">Choose file</option>
               </select>
             </div>
           </div>
 
           <div class="form-block form-block-quantity disabled">
-            <div class="form-block-header">
+            <div id="2" class="form-block-header">
               <span>3</span>
               <h6>Selecteaza Cantitatea</h6>
             </div>
             <div class="form-block-body">
-              <label class="form-label" for="quantity">Cantitate</label>
-              <input type="number" class="form-control form-quantity form-input" name="quantity" required="" min="1" max="100"
-                     value="1">
+              <input type="number" class="form-control form-quantity form-input" name="quantity" required="" min="1" max="200"
+                     value="1" data-id="2" >
             </div>
           </div>
 
@@ -83,7 +85,6 @@ function mos_order_block_render_cb( $attributes ): false|string {
 
       <div class="form-submit hide" >
         <div class="form-submit-wrapper">
-          <input type="hidden" name="action" value="add_product_to_cart">
           <input class="form-submit-button form-subscribe-button hide" type="submit" value="Proceseaza Comanda">
         </div>
       </div>

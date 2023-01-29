@@ -1,6 +1,6 @@
 <?php
 
-function mos_auth_link_render_cb( $attributes ): false|string {
+function mos_auth_link_render_cb( $attributes ) {
 	$user           = wp_get_current_user();
 	$user_logged_in = $user->exists();
 
