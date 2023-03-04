@@ -1,77 +1,21 @@
 document.addEventListener("DOMContentLoaded", () => {
-  let totalPrice = null;
-  let filesData = [];
-  let lastWrapperId = 0;
-  let totalPriceElm = null;
+  const apiUrl = "https://lasercut.internetguru.io/api/v2/analyze?id=mos";
 
   const orderForm = document.getElementById("mos-order-form");
+  const formGroup = document.querySelector(".order-form-group");
+  const totalPriceElm = document.getElementById("order-form-total-price");
 
-  function addFileWrapperListener(fileWrapper, wrapId) {
-    fileWrapper.addEventListener("change", (event) => {
-      calculatePrice(wrapId);
-    });
-    fileWrapper
-      .querySelector(".form-quantity")
-      .addEventListener("keydown", (event) => {
-        if (event.key === "Enter") {
-          calculatePrice(wrapId);
-          event.preventDefault();
-        }
-        if (event.keyCode == 9) {
-          calculatePrice(wrapId);
-        }
-      });
-  }
+  const data = [];
+  const loader = "...";
 
-  function addFileWrapper(fileWrapper, wrapId) {
-    let newWrapper = fileWrapper.cloneNode(true);
-    lastWrapperId++;
-    initFilesData(lastWrapperId, newWrapper);
-    newWrapper.setAttribute("data-filenum", lastWrapperId);
-    newWrapper.querySelector(".form-file-status").innerHTML = "-";
-    newWrapper.querySelector(".form-file").value = "";
-    newWrapper.querySelector(".form-quantity").value = 1;
-    newWrapper.querySelector(".form-size").innerHTML = "-";
-    fileWrapper
-      .querySelector(".col")
-      .insertAdjacentHTML(
-        "beforeend",
-        `<a class="form-del btn btn-outline-dark border-0 w-auto mt-0 position-absolute top-0 end-0" data-id="${wrapId}" href="Javascript:void(0);"><span class="bi-x-lg"></span></a>`
-      );
-    fileWrapper
-      .querySelector(".form-file-status")
-      .insertAdjacentHTML(
-        "afterend",
-        `<div><div></div><a class="form-calc btn btn-primary btn-sm" title="Recalculate" href="Javascript:void(0);"><span class="bi-arrow-clockwise fs-5"></span></a></div>`
-      );
-    let fileInput = fileWrapper.querySelector(".form-file");
-    let fileName = document.createElement("p");
-    fileName.className = "mt-2 mb-0";
-    fileName.innerHTML = fileInput.files[0].name;
-    fileInput.parentNode.replaceChild(fileName, fileInput);
-    fileWrapper
-      .querySelector(".form-del")
-      .addEventListener("click", (event) => {
-        filesData[event.currentTarget.getAttribute("data-id")] = null;
-        fileWrapper.parentNode.removeChild(fileWrapper);
-        updateForm();
-      });
-    fileWrapper
-      .querySelector(".form-calc")
-      .addEventListener("click", (event) => {
-        calculatePrice(wrapId);
-      });
-    addFileWrapperListener(newWrapper, lastWrapperId);
-    fileWrapper.parentNode.insertBefore(
-      newWrapper,
-      fileWrapper.nextElementSibling
-    );
-  }
+  let totalPrice = null;
 
-  function initFilesData(wrapperId, wrapperElm) {
-    filesData[wrapperId] = {
-      fileWrapper: wrapperElm,
+  // Init data
+  const initData = (id, group) => {
+    data[id] = {
+      group: group,
       status: null,
+      price: null,
       lastMod: null,
       material: null,
       quantity: null,
@@ -81,116 +25,126 @@ document.addEventListener("DOMContentLoaded", () => {
       fileWidth: null,
       fileHeight: null,
       productPrice: null,
-      addedWrapper: false,
+      addedGroup: false,
       valid: false,
     };
-  }
+  };
 
-  function formatPrice(num) {
-    return num.toLocaleString();
-  }
+  // Listen for form group change
+  const formGroupListener = (group, id) => {
+    group.addEventListener("change", () => {
+      getResult(id);
+    });
+  };
 
-  function formatSize(num) {
-    return Math.round(num);
-  }
-
-  function updateForm(wrapId) {
+  const updateGroup = (id) => {
     totalPrice = 0;
-    filesData.forEach((file) => {
-      if (file == null || file.prices == null) {
+    data.forEach((group) => {
+      if (group === null || group.prices === null) {
         return;
       }
-      if (
-        wrapId !== undefined &&
-        wrapId == file.fileWrapper.getAttribute("data-filenum")
-      ) {
-        file.status.innerHTML = loader;
+
+      if (id && id === group.group.getAttribute("data-id")) {
+        group.status.innerHTML = loader;
       }
-      const materialSelect = file.fileWrapper.querySelector(".form-material");
+
+      const materialSelect = group.group.querySelector(".order-form-material");
+
       if (materialSelect.children.length == 1) {
         materialSelect.innerHTML = "";
-        file.prices.forEach((priceData) => {
-          var option = document.createElement("option");
+
+        group.prices.forEach((priceData) => {
+          const option = document.createElement("option");
           option.value = priceData.material_id;
           option.innerHTML = `${priceData.material_name}`;
           option.setAttribute("data-name", priceData.material_name);
           materialSelect.appendChild(option);
         });
       }
-      const quantity = file.fileWrapper.querySelector(".form-quantity").value;
+
+      const quantity = group.group.querySelector(".order-form-quantity").value;
       const price =
-        file.prices[materialSelect.selectedIndex].unit_price * quantity +
-        file.prices[materialSelect.selectedIndex].fix_price;
+        group.prices[materialSelect.selectedIndex].unit_price * quantity +
+        group.prices[materialSelect.selectedIndex].fix_price;
+
       setTimeout(() => {
-        file.status.innerHTML = `${formatPrice(price)} RON`;
-      }, 400);
-      let width = formatSize(file.fileWidth);
-      let height = formatSize(file.fileHeight);
-      file.fileWrapper.querySelector(
-        ".form-size"
-      ).innerHTML = `${width} x ${height}`;
-      file.productPrice = price;
+        group.status.innerHTML = `${Math.round(price)} RON`;
+      }, 300);
+
+      let width = Math.round(group.fileWidth);
+      let height = Math.round(group.fileHeight);
+
+      group.group.querySelector(
+        ".order-form-dimensions"
+      ).innerHTML = `${width} x ${height} mm`;
+
+      group.group.productPrice = price;
       totalPrice += price;
-      file.material =
+      group.material =
         materialSelect[materialSelect.selectedIndex].getAttribute("data-name");
     });
-    totalPriceElm.innerHTML = `${formatPrice(totalPrice)} RON`;
-  }
+    totalPriceElm.innerHTML = `${Math.round(totalPrice)} RON`;
+  };
 
-  function getValidFilesCnt() {
-    let cnt = 0;
-    filesData.forEach((file) => {
-      if (file == null) {
-        return;
-      }
-      if (!file.valid) {
-        return;
-      }
-      cnt++;
-    });
-    return cnt;
-  }
+  // Update form group
+  const getResult = (id) => {
+    const group = data[id].group;
+    const groupFile = group.querySelector(".order-form-file");
+    const groupMaterial = group.querySelector(".order-form-material");
+    const groupQuantity = group.querySelector(".order-form-quantity");
+    const formStatus = group.querySelector(".order-form-status");
 
-  function calculatePrice(wrapId) {
-    const fileWrapper = filesData[wrapId].fileWrapper;
-    const fileInputElement = fileWrapper.querySelector(".form-file");
-    const material = fileWrapper.querySelector(".form-material").value;
-    const materialName =
-      fileWrapper.querySelector(".form-material").selectedOptions[0].text;
-    const quantity = fileWrapper.querySelector(".form-quantity").value;
-    const status = fileWrapper.querySelector(".form-file-status");
+    // Get material & quantity values
+    const groupMaterialValue = groupMaterial.value;
+    const groupQuantityValue = groupQuantity.value;
+
+    // Get material name
+    const groupMaterialName =
+      groupMaterial.options[groupMaterial.selectedIndex].text;
+
+    // Get file
     let file = null;
-    if (filesData[wrapId].file == null) {
-      if (!fileInputElement.value) {
-        status.innerHTML = "Choose file";
-        return false;
+    if (data[id].file == null) {
+      if (!groupFile.value) {
+        formStatus.innerHTML = "No file selected.";
+        return;
       }
-      file = fileInputElement.files[0];
+      file = groupFile.files[0];
     } else {
-      file = filesData[wrapId].file;
+      file = data[id].file;
     }
-    if (quantity < 1 || quantity > 100) {
-      status.innerHTML = "Quantity must be between 1 and 100";
-      return false;
+
+    // Check if quantity is valid
+    if (groupQuantityValue < 1 || groupQuantityValue > 100) {
+      formStatus.innerHTML = "Quantity must be between 1 and 100.";
+      return;
     }
+
     const fileName = file.name;
     const lastMod = file.lastModified + fileName;
-    filesData[wrapId].quantity = quantity;
-    if (filesData[wrapId].lastMod !== lastMod) {
-      filesData[wrapId].status = status;
-      filesData[wrapId].material = materialName;
-      filesData[wrapId].lastMod = lastMod;
+
+    // Set quantity
+    data[id].quantity = groupQuantityValue;
+
+    if (data[id].lastMod !== lastMod) {
+      data[id].status = formStatus;
+      data[id].material = groupMaterialValue;
+      data[id].lastMod = lastMod;
+
       const form = new FormData();
-      form.append("material", material);
-      form.append("amount", quantity);
-      if (filesData[wrapId].valid && filesData[wrapId].fileHash !== null) {
-        form.append("hash", filesData[wrapId].fileHash);
+      form.append("material", groupMaterialValue);
+      form.append("amount", groupQuantityValue);
+
+      if (data[id].valid && data[id].fileHash !== null) {
+        form.append("hash", data[id].fileHash);
       } else {
         form.append("dxf_file", file, fileName);
       }
-      status.innerHTML = loader;
+
+      formStatus.innerHTML = loader;
+
       fetch(apiUrl, {
-        method: "post",
+        method: "POST",
         body: form,
       })
         .then((response) => {
@@ -202,51 +156,44 @@ document.addEventListener("DOMContentLoaded", () => {
           });
         })
         .then((result) => {
-          // filesData[wrapId].productPrice = parseInt(result.price)
-          filesData[wrapId].prices = result.prices;
-          filesData[wrapId].materialPrices = result.prices;
-          filesData[wrapId].fileHash = result.file_hash;
-          filesData[wrapId].fileURL = result.filew_path;
-          filesData[wrapId].fileWidth = result.model_width;
-          filesData[wrapId].fileHeight = result.model_height;
-          filesData[wrapId].file = file;
-          filesData[wrapId].valid = true;
-          // if (!filesData[wrapId].addedWrapper) {
-          // addFileWrapper(fileWrapper, wrapId);
-          // filesData[wrapId].addedWrapper = true;
-          // }
-          updateForm(wrapId);
+          data[id].prices = result.prices;
+          data[id].materialPrices = result.prices;
+          data[id].fileHash = result.file_hash;
+          data[id].fileURL = result.file_path;
+          data[id].fileWidth = result.model_width;
+          data[id].fileHeight = result.model_height;
+          data[id].file = file;
+          data[id].valid = true;
+          if (!data[id].group) {
+            // add new group
+            data[id].addedGroup = true;
+          }
+          updateGroup(id);
         })
         .catch((error) => {
-          alert(error);
-          status.innerHTML = "-";
-          filesData[wrapId].lastMod = null;
-          filesData[wrapId].valid = false;
+          console.log(error);
+          formStatus.innerHTML = error;
+          data[id].lastMod = null;
+          data[id].valid = false;
         });
       return;
     }
-    filesData[wrapId].material = quantity;
-    filesData[wrapId].material = materialName;
-    updateForm(wrapId);
-    filesData[wrapId].valid = true;
-  }
 
-  const loader = "...";
-  const fileWrapper = document.querySelector(".form-group");
-  const apiUrl = "https://lasercut.internetguru.io/api/v2/analyze?id=mos";
+    data[id].material = groupMaterialValue;
+    updateGroup(id);
+    data[id].valid = true;
+  };
 
-  initFilesData(0, fileWrapper);
-  totalPriceElm = document.getElementById("order-price");
-  addFileWrapperListener(fileWrapper, 0);
+  const init = () => {
+    initData(0, formGroup);
+    formGroupListener(formGroup, 0);
+  };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  init();
 
+  // submit form
+  orderForm.addEventListener("submit", (event) => {
     const formData = new FormData(orderForm);
-
-    filesData.forEach((data) => {
-      formData.append("price", data.productPrice);
-    });
 
     const request = new XMLHttpRequest();
     request.open("POST", mos_auth_rest.order, true);
@@ -259,11 +206,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     };
     request.send(formData);
-
     event.preventDefault();
-  };
-
-  orderForm.addEventListener("submit", handleSubmit);
+  });
 
   orderForm.reset();
 });
