@@ -39,6 +39,12 @@
         'options' => [
           'render_callback' => 'mos_register_form'
         ]
+      ],
+      [
+        'name' => 'formular-comanda',
+        'options' => [
+          'render_callback' => 'mos_formular_comanda'
+        ]
       ]
     ];
 

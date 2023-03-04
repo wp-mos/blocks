@@ -25,4 +25,10 @@
       "const mos_auth_rest = {$authURLs}",
       'before'
     );
+
+    wp_add_inline_script(
+      'mos-blocks-formular-comanda-script',
+      "const mos_auth_rest = {$authURLs}",
+      'before'
+    );
   }

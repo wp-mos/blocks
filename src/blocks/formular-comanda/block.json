@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/WordPress/gutenberg/trunk/schemas/json/block.json",
+  "apiVersion": 2,
+  "name": "mos-blocks/formular-comanda",
+  "title": "Formular Comanda",
+  "category": "mos-category",
+  "description": "Formular Comanda",
+  "textdomain": "mos-blocks",
+  "editorScript": "file:./index.js",
+  "style": "file:./index.css",
+  "script": [
+    "file:./api.js"
+  ]
+}
