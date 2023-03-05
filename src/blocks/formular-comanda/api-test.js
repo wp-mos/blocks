@@ -44,11 +44,15 @@ document.addEventListener("DOMContentLoaded", () => {
         "afterend",
         `<div><div></div><a class="form-calc btn btn-primary btn-sm" title="Recalculate" href="Javascript:void(0);"><span class="bi-arrow-clockwise fs-5"></span></a></div>`
       );
+
+    // Replace file input with file name
     let fileInput = fileWrapper.querySelector(".form-file");
     let fileName = document.createElement("p");
     fileName.className = "mt-2 mb-0";
     fileName.innerHTML = fileInput.files[0].name;
     fileInput.parentNode.replaceChild(fileName, fileInput);
+
+    // Add file wrapper listeners
     fileWrapper
       .querySelector(".form-del")
       .addEventListener("click", (event) => {
@@ -56,11 +60,13 @@ document.addEventListener("DOMContentLoaded", () => {
         fileWrapper.parentNode.removeChild(fileWrapper);
         updateForm();
       });
+
     fileWrapper
       .querySelector(".form-calc")
       .addEventListener("click", (event) => {
         calculatePrice(wrapId);
       });
+
     addFileWrapperListener(newWrapper, lastWrapperId);
     fileWrapper.parentNode.insertBefore(
       newWrapper,

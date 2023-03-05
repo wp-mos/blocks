@@ -29,12 +29,10 @@
                   </div>
 
                   <div class="order-form-block">
-                      <div class="order-form-dimensions"></div>
-                      <div class="order-form-status"></div>
+                      <div class="order-form-dimensions">-</div>
+                      <div class="order-form-status">-</div>
                   </div>
 
-
-                  <button type="button" id="order-form-add" data-id="0">Add New Design</button>
 
               </div>
 
@@ -42,6 +40,8 @@
               <button id="mos-submit-form" type="submit">Proceseaza Comanda</button>
 
           </form>
+
+          <button type="button" id="order-form-add" data-id="0">Add New Design</button>
 
 
       </div>

@@ -186,10 +186,7 @@ document.addEventListener("DOMContentLoaded", () => {
     data[id].valid = true;
   };
 
-  const addGroupHandler = (event) => {
-    event.preventDefault();
-    const id = prevId + 1;
-
+  const buildBlock = (id) => {
     const newGroup = document.createElement("div");
     newGroup.classList.add("order-form-group");
     newGroup.dataset.id = `${id}`;
@@ -250,24 +247,27 @@ document.addEventListener("DOMContentLoaded", () => {
     statusBlock.classList.add("order-form-block");
     const statusBlockDimensions = document.createElement("div");
     statusBlockDimensions.classList.add("order-form-dimensions");
+    statusBlockDimensions.innerHTML = "-";
     const statusBlockPrice = document.createElement("div");
     statusBlockPrice.classList.add("order-form-status");
+    statusBlockPrice.innerHTML = "-";
     statusBlock.appendChild(statusBlockDimensions);
     statusBlock.appendChild(statusBlockPrice);
-
-    //Add new group button
-    const addGroupButton = document.createElement("button");
-    addGroupButton.classList.add("order-form-add");
-    addGroupButton.innerHTML = "Add new design";
-    addGroupButton.setAttribute("id", "order-form-add");
-    addGroupButton.dataset.id = `${id}`;
 
     newGroup.appendChild(fileBlock);
     newGroup.appendChild(materialBlock);
     newGroup.appendChild(quantityBlock);
     newGroup.appendChild(statusBlock);
-    newGroup.appendChild(addGroupButton);
     orderForm.insertBefore(newGroup, totalPriceElm);
+    return newGroup;
+  };
+
+  const addGroupHandler = (event) => {
+    event.preventDefault();
+    prevId++;
+    let newGroup = buildBlock(prevId);
+    initData(prevId, newGroup);
+    formGroupListener(newGroup, prevId);
   };
 
   // Add new group
