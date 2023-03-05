@@ -4,9 +4,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const orderForm = document.getElementById("mos-order-form");
   const formGroup = document.querySelector(".order-form-group");
   const totalPriceElm = document.getElementById("order-form-total-price");
+  const addGroup = document.getElementById("order-form-add");
 
   const data = [];
   const loader = "...";
+  let prevId = 0;
 
   let totalPrice = null;
 
@@ -183,6 +185,93 @@ document.addEventListener("DOMContentLoaded", () => {
     updateGroup(id);
     data[id].valid = true;
   };
+
+  const addGroupHandler = (event) => {
+    event.preventDefault();
+    const id = prevId + 1;
+
+    const newGroup = document.createElement("div");
+    newGroup.classList.add("order-form-group");
+    newGroup.dataset.id = `${id}`;
+
+    // Add file block
+    const fileBlock = document.createElement("div");
+    fileBlock.classList.add("order-form-block");
+    const formBlockLabel = document.createElement("label");
+    formBlockLabel.classList.add("order-form-label");
+    formBlockLabel.setAttribute("for", `file-${id}`);
+    formBlockLabel.innerHTML = "DXF File";
+    const formBlockInput = document.createElement("input");
+    formBlockInput.classList.add("order-form-file");
+    formBlockInput.setAttribute("type", "file");
+    formBlockInput.setAttribute("name", `file-${id}`);
+    formBlockInput.setAttribute("required", true);
+    fileBlock.appendChild(formBlockLabel);
+    fileBlock.appendChild(formBlockInput);
+
+    // Add material block
+    const materialBlock = document.createElement("div");
+    materialBlock.classList.add("order-form-block");
+    const materialBlockLabel = document.createElement("label");
+    materialBlockLabel.classList.add("order-form-label");
+    materialBlockLabel.setAttribute("for", `material`);
+    materialBlockLabel.innerHTML = "Material";
+    const materialBlockSelect = document.createElement("select");
+    materialBlockSelect.classList.add("order-form-material");
+    materialBlockSelect.setAttribute("name", `material`);
+    materialBlockSelect.setAttribute("required", true);
+    const materialBlockSelectOption = document.createElement("option");
+    materialBlockSelectOption.innerHTML = "Choose file";
+    materialBlockSelectOption.setAttribute("value", "");
+    materialBlockSelect.appendChild(materialBlockSelectOption);
+    materialBlock.appendChild(materialBlockLabel);
+    materialBlock.appendChild(materialBlockSelect);
+
+    // Add quantity block
+    const quantityBlock = document.createElement("div");
+    quantityBlock.classList.add("order-form-block");
+    const quantityBlockLabel = document.createElement("label");
+    quantityBlockLabel.classList.add("order-form-label");
+    quantityBlockLabel.setAttribute("for", `quantity`);
+    quantityBlockLabel.innerHTML = "Quantity";
+    const quantityBlockInput = document.createElement("input");
+    quantityBlockInput.classList.add("order-form-quantity");
+    quantityBlockInput.setAttribute("type", "number");
+    quantityBlockInput.setAttribute("name", `quantity`);
+    quantityBlockInput.setAttribute("required", true);
+    quantityBlockInput.setAttribute("min", 1);
+    quantityBlockInput.setAttribute("max", 100);
+    quantityBlockInput.setAttribute("value", 1);
+    quantityBlock.appendChild(quantityBlockLabel);
+    quantityBlock.appendChild(quantityBlockInput);
+
+    // Add status block
+    const statusBlock = document.createElement("div");
+    statusBlock.classList.add("order-form-block");
+    const statusBlockDimensions = document.createElement("div");
+    statusBlockDimensions.classList.add("order-form-dimensions");
+    const statusBlockPrice = document.createElement("div");
+    statusBlockPrice.classList.add("order-form-status");
+    statusBlock.appendChild(statusBlockDimensions);
+    statusBlock.appendChild(statusBlockPrice);
+
+    //Add new group button
+    const addGroupButton = document.createElement("button");
+    addGroupButton.classList.add("order-form-add");
+    addGroupButton.innerHTML = "Add new design";
+    addGroupButton.setAttribute("id", "order-form-add");
+    addGroupButton.dataset.id = `${id}`;
+
+    newGroup.appendChild(fileBlock);
+    newGroup.appendChild(materialBlock);
+    newGroup.appendChild(quantityBlock);
+    newGroup.appendChild(statusBlock);
+    newGroup.appendChild(addGroupButton);
+    orderForm.insertBefore(newGroup, totalPriceElm);
+  };
+
+  // Add new group
+  addGroup.addEventListener("click", addGroupHandler);
 
   const init = () => {
     initData(0, formGroup);

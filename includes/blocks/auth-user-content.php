@@ -197,4 +197,3 @@
     ob_end_clean();
     return $output;
   }
-
