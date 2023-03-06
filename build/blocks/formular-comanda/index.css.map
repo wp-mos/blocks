@@ -1,1 +1,0 @@
-{"version":3,"file":"blocks/formular-comanda/index.css","mappings":";;;AAAA;EACE,aAAa;AACf","sources":["webpack://@wp-mos/blocks/./src/blocks/formular-comanda/index.css"],"sourcesContent":[".order-form-group {\n  display: flex;\n}\n"],"names":[],"sourceRoot":""}

@@ -6,12 +6,6 @@
   "category": "mos-category",
   "description": "Adds a header toolbar that contains an authentication link",
   "textdomain": "mos-blocks",
-  "attributes": {
-    "showAuth": {
-      "type": "boolean",
-      "default": true
-    }
-  },
   "editorScript": "file:./index.js",
   "style": "file:./index.css"
 }

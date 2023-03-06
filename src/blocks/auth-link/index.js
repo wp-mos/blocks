@@ -1,21 +1,9 @@
-import {registerBlockType} from "@wordpress/blocks";
-import {useBlockProps} from "@wordpress/block-editor";
-import {__} from "@wordpress/i18n";
+import { registerBlockType } from "@wordpress/blocks";
 
-import "./main.css";
+import Edit from "./edit";
+
+import "./index.css";
 
 registerBlockType("mos-blocks/auth-link", {
-  edit() {
-    const blockProps = useBlockProps();
-
-    return (
-      <>
-        <div {...blockProps}>
-          <a className="mos-blocks-sign-in-link open-modal" href="#">
-            {__("CONTUL TĂU", "mos-blocks")}
-          </a>
-        </div>
-      </>
-    );
-  },
+  edit: Edit,
 });

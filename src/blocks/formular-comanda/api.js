@@ -211,11 +211,11 @@ document.addEventListener("DOMContentLoaded", () => {
     materialBlock.classList.add("order-form-block");
     const materialBlockLabel = document.createElement("label");
     materialBlockLabel.classList.add("order-form-label");
-    materialBlockLabel.setAttribute("for", `material`);
+    materialBlockLabel.setAttribute("for", `material-${id}`);
     materialBlockLabel.innerHTML = "Material";
     const materialBlockSelect = document.createElement("select");
     materialBlockSelect.classList.add("order-form-material");
-    materialBlockSelect.setAttribute("name", `material`);
+    materialBlockSelect.setAttribute("name", `material-${id}`);
     materialBlockSelect.setAttribute("required", true);
     const materialBlockSelectOption = document.createElement("option");
     materialBlockSelectOption.innerHTML = "Choose file";
@@ -229,12 +229,12 @@ document.addEventListener("DOMContentLoaded", () => {
     quantityBlock.classList.add("order-form-block");
     const quantityBlockLabel = document.createElement("label");
     quantityBlockLabel.classList.add("order-form-label");
-    quantityBlockLabel.setAttribute("for", `quantity`);
+    quantityBlockLabel.setAttribute("for", `quantity-${id}`);
     quantityBlockLabel.innerHTML = "Quantity";
     const quantityBlockInput = document.createElement("input");
     quantityBlockInput.classList.add("order-form-quantity");
+    quantityBlockInput.setAttribute("name", `quantity-${id}`);
     quantityBlockInput.setAttribute("type", "number");
-    quantityBlockInput.setAttribute("name", `quantity`);
     quantityBlockInput.setAttribute("required", true);
     quantityBlockInput.setAttribute("min", 1);
     quantityBlockInput.setAttribute("max", 100);

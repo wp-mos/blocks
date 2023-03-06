@@ -15,15 +15,15 @@
                   </div>
 
                   <div class="order-form-block">
-                      <label class="order-form-label" for="material">Material</label>
-                      <select class="order-form-material" name="material" required>
+                      <label class="order-form-label" for="material-0">Material</label>
+                      <select class="order-form-material" name="material-0" required>
                           <option>Choose file</option>
                       </select>
                   </div>
 
                   <div class="order-form-block">
-                      <label class="order-form-label" for="quantity">Quantity</label>
-                      <input type="number" class="order-form-quantity" name="quantity" min="1"
+                      <label class="order-form-label" for="quantity-0">Quantity</label>
+                      <input type="number" class="order-form-quantity" name="quantity-0" min="1"
                              required
                              max="100" value="1">
                   </div>
