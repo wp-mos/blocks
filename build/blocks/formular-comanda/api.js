@@ -1,15 +1,17 @@
+/******/ (() => { // webpackBootstrap
+var __webpack_exports__ = {};
+/*!********************************************!*\
+  !*** ./src/blocks/formular-comanda/api.js ***!
+  \********************************************/
 document.addEventListener("DOMContentLoaded", () => {
   const apiUrl = "https://lasercut.internetguru.io/api/v2/analyze?id=mos";
-
   const orderForm = document.getElementById("mos-order-form");
   const formGroup = document.querySelector(".order-form-group");
   const totalPriceElm = document.getElementById("order-form-total-price");
   const addGroup = document.getElementById("order-form-add");
-
   const data = [];
   const loader = "...";
   let prevId = 0;
-
   let totalPrice = null;
 
   // Init data
@@ -28,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
       fileHeight: null,
       productPrice: null,
       addedGroup: false,
-      valid: false,
+      valid: false
     };
   };
 
@@ -38,24 +40,19 @@ document.addEventListener("DOMContentLoaded", () => {
       getResult(id);
     });
   };
-
-  const updateGroup = (id) => {
+  const updateGroup = id => {
     totalPrice = 0;
-    data.forEach((group) => {
+    data.forEach(group => {
       if (group === null || group.prices === null) {
         return;
       }
-
       if (id && id === group.group.getAttribute("data-id")) {
         group.status.innerHTML = loader;
       }
-
       const materialSelect = group.group.querySelector(".order-form-material");
-
       if (materialSelect.children.length == 1) {
         materialSelect.innerHTML = "";
-
-        group.prices.forEach((priceData) => {
+        group.prices.forEach(priceData => {
           const option = document.createElement("option");
           option.value = priceData.material_id;
           option.innerHTML = `${priceData.material_name}`;
@@ -63,33 +60,23 @@ document.addEventListener("DOMContentLoaded", () => {
           materialSelect.appendChild(option);
         });
       }
-
       const quantity = group.group.querySelector(".order-form-quantity").value;
-      const price =
-        group.prices[materialSelect.selectedIndex].unit_price * quantity +
-        group.prices[materialSelect.selectedIndex].fix_price;
-
+      const price = group.prices[materialSelect.selectedIndex].unit_price * quantity + group.prices[materialSelect.selectedIndex].fix_price;
       setTimeout(() => {
         group.status.innerHTML = `${Math.round(price)} RON`;
       }, 300);
-
       let width = Math.round(group.fileWidth);
       let height = Math.round(group.fileHeight);
-
-      group.group.querySelector(
-        ".order-form-dimensions"
-      ).innerHTML = `${width} x ${height} mm`;
-
+      group.group.querySelector(".order-form-dimensions").innerHTML = `${width} x ${height} mm`;
       group.group.productPrice = price;
       totalPrice += price;
-      group.material =
-        materialSelect[materialSelect.selectedIndex].getAttribute("data-name");
+      group.material = materialSelect[materialSelect.selectedIndex].getAttribute("data-name");
     });
     totalPriceElm.innerHTML = `${Math.round(totalPrice)} RON`;
   };
 
   // Update form group
-  const getResult = (id) => {
+  const getResult = id => {
     const group = data[id].group;
     const groupFile = group.querySelector(".order-form-file");
     const groupMaterial = group.querySelector(".order-form-material");
@@ -101,8 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const groupQuantityValue = groupQuantity.value;
 
     // Get material name
-    const groupMaterialName =
-      groupMaterial.options[groupMaterial.selectedIndex].text;
+    const groupMaterialName = groupMaterial.options[groupMaterial.selectedIndex].text;
 
     // Get file
     let file = null;
@@ -121,72 +107,61 @@ document.addEventListener("DOMContentLoaded", () => {
       formStatus.innerHTML = "Quantity must be between 1 and 100.";
       return;
     }
-
     const fileName = file.name;
     const lastMod = file.lastModified + fileName;
 
     // Set quantity
     data[id].quantity = groupQuantityValue;
-
     if (data[id].lastMod !== lastMod) {
       data[id].status = formStatus;
       data[id].material = groupMaterialValue;
       data[id].lastMod = lastMod;
-
       const form = new FormData();
       form.append("material", groupMaterialValue);
       form.append("amount", groupQuantityValue);
-
       if (data[id].valid && data[id].fileHash !== null) {
         form.append("hash", data[id].fileHash);
       } else {
         form.append("dxf_file", file, fileName);
       }
-
       formStatus.innerHTML = loader;
-
       fetch(apiUrl, {
         method: "POST",
-        body: form,
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          }
-          return response.json().then((text) => {
-            throw new Error(text.message);
-          });
-        })
-        .then((result) => {
-          data[id].prices = result.prices;
-          data[id].materialPrices = result.prices;
-          data[id].fileHash = result.file_hash;
-          data[id].fileURL = result.file_path;
-          data[id].fileWidth = result.model_width;
-          data[id].fileHeight = result.model_height;
-          data[id].file = file;
-          data[id].valid = true;
-          if (!data[id].group) {
-            // add new group
-            data[id].addedGroup = true;
-          }
-          updateGroup(id);
-        })
-        .catch((error) => {
-          console.log(error);
-          formStatus.innerHTML = error;
-          data[id].lastMod = null;
-          data[id].valid = false;
+        body: form
+      }).then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+        return response.json().then(text => {
+          throw new Error(text.message);
         });
+      }).then(result => {
+        data[id].prices = result.prices;
+        data[id].materialPrices = result.prices;
+        data[id].fileHash = result.file_hash;
+        data[id].fileURL = result.file_path;
+        data[id].fileWidth = result.model_width;
+        data[id].fileHeight = result.model_height;
+        data[id].file = file;
+        data[id].valid = true;
+        if (!data[id].group) {
+          // add new group
+          data[id].addedGroup = true;
+        }
+        updateGroup(id);
+      }).catch(error => {
+        console.log(error);
+        formStatus.innerHTML = error;
+        data[id].lastMod = null;
+        data[id].valid = false;
+      });
       return;
     }
-
     data[id].material = groupMaterialValue;
     updateGroup(id);
     data[id].valid = true;
   };
-
-  const buildBlock = (id) => {
+  const buildBlock = id => {
     const newGroup = document.createElement("div");
     newGroup.classList.add("order-form-group");
     newGroup.dataset.id = `${id}`;
@@ -253,7 +228,6 @@ document.addEventListener("DOMContentLoaded", () => {
     statusBlockPrice.innerHTML = "-";
     statusBlock.appendChild(statusBlockDimensions);
     statusBlock.appendChild(statusBlockPrice);
-
     newGroup.appendChild(fileBlock);
     newGroup.appendChild(materialBlock);
     newGroup.appendChild(quantityBlock);
@@ -261,8 +235,7 @@ document.addEventListener("DOMContentLoaded", () => {
     orderForm.insertBefore(newGroup, totalPriceElm);
     return newGroup;
   };
-
-  const addGroupHandler = (event) => {
+  const addGroupHandler = event => {
     event.preventDefault();
     prevId++;
     let newGroup = buildBlock(prevId);
@@ -272,15 +245,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Add new group
   addGroup.addEventListener("click", addGroupHandler);
-
   const init = () => {
     initData(0, formGroup);
     formGroupListener(formGroup, 0);
   };
-
   init();
-
-  const getCookie = (name) => {
+  const getCookie = name => {
     const value = "; " + document.cookie;
     const parts = value.split("; " + name + "=");
     if (parts.length === 2) {
@@ -289,12 +259,10 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // submit form
-  orderForm.addEventListener("submit", (event) => {
+  orderForm.addEventListener("submit", event => {
     const token = getCookie("user_access_token");
     const formData = new FormData(orderForm);
-
     console.log(token);
-
     const request = new XMLHttpRequest();
     request.open("POST", mos_auth_rest.order, true);
     // request.setRequestHeader("Authorization", "Bearer " + token);
@@ -311,6 +279,8 @@ document.addEventListener("DOMContentLoaded", () => {
     request.send(formData);
     event.preventDefault();
   });
-
   orderForm.reset();
 });
+/******/ })()
+;
+//# sourceMappingURL=api.js.map

@@ -2,8 +2,16 @@
 
   function mos_rest_api_order_handler($request)
   {
+//    $token = $_COOKIE['user_access_token'];
+//    if ( ! $token ) {
+//      // Access token not found, redirect to login page
+//      wp_redirect( '/utilizatori/autentificare/' );
+//      exit;
+//    }
+
     $response = ['status' => 1];
     $params = $request->get_params();
+
 
     $files = $_FILES;
     foreach ($files as $file) {
@@ -34,4 +42,3 @@
     $response['status'] = 2;
     return rest_ensure_response($response);
   }
-
