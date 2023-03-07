@@ -280,25 +280,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
   init();
 
-  const getCookie = (name) => {
-    const value = "; " + document.cookie;
-    const parts = value.split("; " + name + "=");
-    if (parts.length === 2) {
-      return parts.pop().split(";").shift();
+  function getCookie(name) {
+    const cookieString = document.cookie;
+    const cookies = cookieString.split("; ");
+    for (let i = 0; i < cookies.length; i++) {
+      const [cookieName, cookieValue] = cookies[i].split("=");
+      if (cookieName === name) {
+        return cookieValue;
+      }
     }
-  };
+    return null;
+  }
 
   // submit form
   orderForm.addEventListener("submit", (event) => {
-    const token = getCookie("user_access_token");
+    const token = getCookie("auth_token");
     const formData = new FormData(orderForm);
-
-    console.log(token);
 
     const request = new XMLHttpRequest();
     request.open("POST", mos_auth_rest.order, true);
-    // request.setRequestHeader("Authorization", "Bearer " + token);
-    // request.setRequestHeader("Content-Type", "application/json");
+    request.setRequestHeader("Authorization", "Bearer " + token);
+    request.setRequestHeader("Accept", "application/json");
 
     request.onload = () => {
       if (request.status === 200) {

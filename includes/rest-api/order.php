@@ -2,12 +2,14 @@
 
   function mos_rest_api_order_handler($request)
   {
-//    $token = $_COOKIE['user_access_token'];
-//    if ( ! $token ) {
-//      // Access token not found, redirect to login page
-//      wp_redirect( '/utilizatori/autentificare/' );
-//      exit;
-//    }
+    // Check for authorization token in the request headers
+    $headers = $request->get_headers();
+    $auth_token = $headers['authorization'] ?? '';
+
+    $token = $headers['authorization'];
+    $prefix = "Bearer ";
+    $user_id = substr($token[0], strlen($prefix));
+
 
     $response = ['status' => 1];
     $params = $request->get_params();
@@ -38,6 +40,7 @@
     }
 
     $response['params'] = $params;
+    $response['files'] = $user_id;
 
     $response['status'] = 2;
     return rest_ensure_response($response);

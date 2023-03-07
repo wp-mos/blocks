@@ -26,6 +26,10 @@
       return $response;
     }
 
+//    $token = wp_generate_auth_cookie( $user->ID, time() + 3600, 'auth' );
+    // Store the token in a cookie
+    setcookie( 'auth_token', $user->ID, time() + 3600, '/' );
+
     $response['status'] = 2;
     return $response;
   }
