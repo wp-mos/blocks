@@ -10,10 +10,8 @@
     $prefix = "Bearer ";
     $user_id = substr($token[0], strlen($prefix));
 
-
     $response = ['status' => 1];
     $params = $request->get_params();
-
 
     $files = $_FILES;
     foreach ($files as $file) {
