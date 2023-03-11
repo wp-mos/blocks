@@ -23,7 +23,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const responseJSON = await response.json();
 
     if (responseJSON.status === 2) {
-      location.replace("http://mos.local/utilizatori/comanda/");
+      // location.replace("http://mos.local/utilizatori/comanda/");
+      console.log(responseJSON);
     } else {
       loginStatus.innerHTML = "Email sau parolă incorectă!";
       loginStatus.classList.add("padding");
