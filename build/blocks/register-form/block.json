@@ -8,6 +8,5 @@
   "textdomain": "mos-blocks",
   "attributes": {},
   "editorScript": "file:./register-form.js",
-  "style": "file:./register-form.css",
-  "script": "file:./frontend.js"
+  "style": "file:./register-form.css"
 }
