@@ -32,7 +32,6 @@ function mos_login_form()
       if (is_wp_error($user)) {
         $output .= '<div class="login-error">' . esc_html__('Invalid login credentials.', 'text-domain') . '</div>';
       } else {
-        wp_set_current_user($user->ID, $user->user_login);
         wp_set_auth_cookie($user->ID);
         wp_safe_redirect(home_url() . '/utilizatori/comanda/');
         exit;

@@ -294,12 +294,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // submit form
   orderForm.addEventListener("submit", (event) => {
-    const token = getCookie("auth_token");
     const formData = new FormData(orderForm);
 
     const request = new XMLHttpRequest();
     request.open("POST", mos_auth_rest.order, true);
-    request.setRequestHeader("Authorization", "Bearer " + token);
     request.setRequestHeader("Accept", "application/json");
 
     request.onload = () => {
@@ -310,7 +308,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("error");
       }
     };
-    // request.send(formData);
+    request.send(formData);
     event.preventDefault();
   });
 
