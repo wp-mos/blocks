@@ -32,6 +32,13 @@ function mos_login_form()
       if (is_wp_error($user)) {
         $output .= '<div class="login-error">' . esc_html__('Invalid login credentials.', 'text-domain') . '</div>';
       } else {
+        // Generate and store a token for the user
+        $token = wp_generate_password(32);
+        update_user_meta($user->ID, 'auth_token', $token);
+
+        // Set the token as a cookie
+        setcookie('auth_token', $token, time() + (86400 * 30), "/"); // Cookie will expire in 30 days
+
         wp_set_auth_cookie($user->ID);
         wp_safe_redirect(home_url() . '/utilizatori/comanda/');
         exit;
