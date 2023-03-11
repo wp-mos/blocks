@@ -8,6 +8,5 @@
   "textdomain": "mos-blocks",
   "attributes": {},
   "editorScript": "file:./login-form.js",
-  "style": "file:./login-form.css",
-  "script": "file:./frontend.js"
+  "style": "file:./login-form.css"
 }
