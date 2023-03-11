@@ -310,7 +310,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("error");
       }
     };
-    request.send(formData);
+    // request.send(formData);
     event.preventDefault();
   });
 

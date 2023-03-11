@@ -1,45 +1,40 @@
 <?php
+function mos_rest_api_order_handler($request)
+{
+  // Check for authorization token in the request headers
+  $headers = $request->get_headers();
 
-  function mos_rest_api_order_handler($request)
-  {
-    // Check for authorization token in the request headers
-    $headers = $request->get_headers();
-    $auth_token = $headers['authorization'] ?? '';
+  $token = $headers['authorization'];
+  $prefix = "Bearer ";
+  $user_id = substr($token[0], strlen($prefix));
 
-    $token = $headers['authorization'];
-    $prefix = "Bearer ";
-    $user_id = substr($token[0], strlen($prefix));
+  // Authenticate the user
+  $user = wp_set_current_user($user_id);
+  wp_set_auth_cookie($user_id);
 
-    $response = ['status' => 1];
-    $params = $request->get_params();
+  $response = ['status' => 1];
+  $params = $request->get_params();
 
-    $files = $_FILES;
-    foreach ($files as $file) {
-      $file_name = basename($file['name']);
-      $file_path = $file['tmp_name'];
+  // Create a product
+  $product = new WC_Product();
+  $product->set_name($params['name']);
+  $product->set_regular_price($params['price']);
+  $product->set_description($params['description']);
+  $product->set_status('publish');
 
-      // Set target directory
-      $upload_dir = wp_upload_dir();
-      $target_dir = $upload_dir['basedir'] . '/order-uploads/';
-      $target_file = $target_dir . $file_name;
+  // Add the product to the database
+  $product_id = $product->save();
 
-      if (file_exists($target_file)) {
-        $response['status'] = 'error';
-        $response['message'] = 'File already exists';
-      } else {
-        if (move_uploaded_file($file_path, $target_file)) {
-          $response['status'] = 2;
-          $response['message'] = 'File uploaded successfully';
-        } else {
-          $response['status'] = 'error';
-          $response['message'] = 'File upload failed';
-        }
-      }
-    }
+  // Get the global cart object
+  $cart = WC()->cart->add_to_cart($product_id);
 
-    $response['params'] = $params;
-    $response['files'] = $user_id;
+  // Add the product to the cart
+  // $cart->add_to_cart($product_id);
 
-    $response['status'] = 2;
-    return rest_ensure_response($response);
-  }
+  $response['params'] = $params;
+  $response['userID'] = $user_id;
+  $response['user'] = $user;
+  $response['productID'] = $product_id;
+
+  return rest_ensure_response($response);
+}
