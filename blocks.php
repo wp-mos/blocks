@@ -19,6 +19,9 @@ if (!function_exists('add_action')) {
 	exit;
 }
 
+// Composer autoload
+require_once ABSPATH . '/vendor/autoload.php';
+
 // Setup
 define('MOS_PLUGIN_DIR', plugin_dir_path(__FILE__));
 
