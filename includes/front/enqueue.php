@@ -3,7 +3,7 @@
 function mos_enqueue_scripts(): void
 {
   $authURLs = json_encode([
-    'order' => esc_url_raw(rest_url('mos/v1/handle-order')),
+    'order' => esc_url_raw(rest_url('mos/v1/order')),
   ]);
 
   wp_add_inline_script(

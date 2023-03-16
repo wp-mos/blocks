@@ -19,9 +19,6 @@ if (!function_exists('add_action')) {
 	exit;
 }
 
-// Composer autoload
-require_once ABSPATH . '/vendor/autoload.php';
-
 // Setup
 define('MOS_PLUGIN_DIR', plugin_dir_path(__FILE__));
 
@@ -37,6 +34,9 @@ foreach ($allFiles as $filename) {
 // Filters
 add_filter('block_categories_all', 'mos_register_category');
 add_filter('upload_mimes', 'allow_dfx_files_mime');
+add_filter('woocommerce_rest_authentication', function ($user, $username, $password) {
+	return new WP_User(wp_authenticate_application_password($user, $username, $password));
+}, 10, 3);
 
 // Hooks
 add_action('init', 'mos_register_blocks');
@@ -47,3 +47,6 @@ add_action('template_redirect', 'mos_redirect_if_not_logged_in');
 add_action('template_redirect', 'mos_redirect_if_logged_in');
 add_action('template_redirect', 'mos_redirects');
 add_action('rest_api_init', 'mos_rest_api_init');
+
+add_action('wp_login', 'mos__generate_auth_token', 10, 2);
+add_filter('http_request_args', 'mos_add_auth_token_to_api_request', 10, 2);

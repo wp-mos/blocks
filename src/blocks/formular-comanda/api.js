@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Listen for form group change
   const formGroupListener = (group, id) => {
     group.addEventListener("change", () => {
-      getResult(id);
+      // getResult(id);
     });
   };
 
@@ -280,25 +280,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
   init();
 
-  function getCookie(name) {
-    const cookieString = document.cookie;
-    const cookies = cookieString.split("; ");
-    for (let i = 0; i < cookies.length; i++) {
-      const [cookieName, cookieValue] = cookies[i].split("=");
-      if (cookieName === name) {
-        return cookieValue;
-      }
+  // Get auth token
+  function getAuthToken() {
+    // Try to get the auth token from the cookie
+    const authToken = getCookie("auth_token");
+    if (authToken) {
+      return authToken;
     }
-    return null;
+  }
+
+  // Get cookie
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+      return parts.pop().split(";").shift();
+    }
   }
 
   // submit form
   orderForm.addEventListener("submit", (event) => {
     const formData = new FormData(orderForm);
 
+    formData.append("title", "Product title");
+    formData.append("description", "Product description");
+    formData.append("price", "100");
+
+    const authToken = getAuthToken();
+
     const request = new XMLHttpRequest();
     request.open("POST", mos_auth_rest.order, true);
     request.setRequestHeader("Accept", "application/json");
+    request.setRequestHeader("Authorization", "Bearer " + authToken);
 
     request.onload = () => {
       if (request.status === 200) {
