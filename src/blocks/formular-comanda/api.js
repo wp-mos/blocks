@@ -280,50 +280,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
   init();
 
-  // Get auth token
-  function getAuthToken() {
-    // Try to get the auth token from the cookie
-    const authToken = getCookie("auth_token");
-    if (authToken) {
-      return authToken;
-    }
-  }
-
-  // Get cookie
-  function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) {
-      return parts.pop().split(";").shift();
-    }
-  }
-
-  // submit form
-  orderForm.addEventListener("submit", (event) => {
-    const formData = new FormData(orderForm);
-
-    formData.append("title", "Product title");
-    formData.append("description", "Product description");
-    formData.append("price", "100");
-
-    const authToken = getAuthToken();
-
-    const request = new XMLHttpRequest();
-    request.open("POST", mos_auth_rest.order, true);
-    request.setRequestHeader("Accept", "application/json");
-    request.setRequestHeader("Authorization", "Bearer " + authToken);
-
-    request.onload = () => {
-      if (request.status === 200) {
-        const response = JSON.parse(request.responseText);
-        console.log(response);
-      } else {
-        console.log("error");
-      }
-    };
-    request.send(formData);
+  orderForm.addEventListener("submit", async (event) => {
     event.preventDefault();
+
+    // const formData = new FormData(orderForm);
+    const formData = new FormData();
+
+    // filesData.forEach((data) => {
+    //   formData.append("price", data.productPrice);
+    // });
+
+    formData.append("name", "product name");
+    formData.append("price", 100);
+    formData.append("quantity", 1);
+    formData.append("material", "material name");
+    formData.append("size", "file size");
+
+    try {
+      const response = await fetch(settings.root, {
+        method: "POST",
+        body: JSON.stringify(formData),
+        headers: {
+          "Content-Type": "application/json",
+          "X-WP-Nonce": settings.nonce,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        const cartUrl = data["cart_url"];
+        orderForm.reset();
+        // location.replace(cartUrl);
+        console.log("Success:", data);
+      } else {
+        console.log("Error:", response.status);
+      }
+    } catch (error) {
+      console.log("Error:", error);
+    }
   });
 
-  orderForm.reset();
+  // orderForm.reset();
 });
