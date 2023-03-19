@@ -38,9 +38,8 @@ function mos_login_form()
 
         // Set the token as a cookie
         setcookie('auth_token', $token, time() + (86400 * 30), "/"); // Cookie will expire in 30 days
-
         wp_set_auth_cookie($user->ID);
-        wp_safe_redirect(home_url() . '/utilizatori/comanda/');
+        wp_safe_redirect(home_url() . '/utilizatori/comanda-noua/');
         exit;
       }
     }
