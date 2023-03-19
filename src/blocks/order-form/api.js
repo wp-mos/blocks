@@ -220,7 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
     formBlockInput.setAttribute("id", `order-form-file-${id}`);
     formBlockInput.classList.add("order-form-file");
     formBlockInput.setAttribute("type", "file");
-    formBlockInput.setAttribute("name", `order-form-file-${id}`);
+    formBlockInput.setAttribute("name", `file-${id}`);
     formBlockInput.setAttribute("required", true);
     formBlockInput.addEventListener("change", (event) => {
       const file = event.target.files[0];
@@ -338,8 +338,11 @@ document.addEventListener("DOMContentLoaded", () => {
   orderForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const formData = new FormData(orderForm);
-    formData.append("price", 100);
-    formData.append("quantity", 1);
+
+    data.forEach((item, index) => {
+      formData.append(`price-${index}`, 9.99);
+      formData.append(`quantity-${index}`, 1);
+    });
 
     try {
       const response = await fetch(settings.root, {
@@ -355,8 +358,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const data = await response.json();
         const cartUrl = data["cart_url"];
         orderForm.reset();
-        // location.replace(cartUrl);
-        console.log("Success:", data);
+        location.replace(cartUrl);
       } else {
         console.log("Error:", response.status);
       }

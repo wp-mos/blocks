@@ -2,128 +2,82 @@
 
 function mos_rest_api_order($request)
 {
-  if (defined('WC_ABSPATH')) {
-    // WC 3.6+ - Cart and other frontend functions are not included for REST requests.
-    include_once WC_ABSPATH . 'includes/wc-cart-functions.php';
-    include_once WC_ABSPATH . 'includes/wc-notice-functions.php';
-    include_once WC_ABSPATH . 'includes/wc-template-hooks.php';
-  }
-
-  if (
-    null === WC()->session
-  ) {
-    $session_class = apply_filters('woocommerce_session_handler', 'WC_Session_Handler');
-
-    WC()->session = new $session_class();
-    WC()->session->init();
-  }
-
-  if (
-    null === WC()->customer
-  ) {
-    WC()->customer = new WC_Customer(get_current_user_id(), true);
-  }
-
-  if (
-    null === WC()->cart
-  ) {
-    WC()->cart = new WC_Cart();
-
-    // We need to force a refresh of the cart contents from session here (cart contents are normally refreshed on wp_loaded, which has already happened by this point).
-    WC()->cart->get_cart();
-  }
+  woo_init();
 
   $response = ['status' => 2];
   $user = wp_get_current_user();
+  $params = $request->get_params();
+  $files = $request->get_file_params();
 
   if (!is_user_logged_in()) {
     $response['status'] = 1;
     return rest_ensure_response($response);
   }
 
-  $new_sku = generate_sku();
+  // Save files in wp-content/uploads/orders directory
+  $upload_dir = wp_upload_dir()['basedir'] . '/orders/';
+  if (!file_exists($upload_dir)) {
+    mkdir($upload_dir, 0755, true);
+  }
 
-  // Create the new product
-  $product_id = wp_insert_post(array(
-    'post_type' => 'product',
-    'post_title' => 'Product Name 3',
-    'post_content' => 'Product Description',
-    'post_status' => 'publish',
-    'meta_input' => array(
-      '_price' => 300,
-      '_stock_status' => 'instock',
-      '_stock' => 1,
-      '_sku' => $new_sku,
-      '_regular_price' => 300,
-      '_visibility' => 'visible',
-    ),
-  ));
+  $product_map = array();
+  $product_ids = array();
+  $index = 0;
+  foreach ($files as $key => $file) {
+    $filename = $file['name'];
+    $tmp_name = $file['tmp_name'];
+    $path = $upload_dir . $filename;
+    move_uploaded_file($tmp_name, $path);
 
-  // Redirect the user to the cart page with the new product
+    $index = intval(str_replace("file-", "", $key));
+
+    $price = $params['price-' . $index];
+    $quantity = $params['quantity-' . $index];
+
+    $response['key'] = $index;
+    $response['quantity'] = $quantity;
+
+    $new_sku = generate_sku();
+
+    $product_id = wp_insert_post(array(
+      'post_type' => 'product',
+      'post_title' => $filename,
+      'post_content' => $filename,
+      'post_status' => 'publish',
+      'meta_input' => array(
+        '_price' => $price,
+        '_stock_status' => 'instock',
+        '_stock' => $quantity,
+        '_sku' => $new_sku,
+        '_regular_price' => $price,
+        '_visibility' => 'visible',
+      ),
+    ));
+
+    // Add download link as meta field
+    update_post_meta($product_id, 'download_link', $path);
+
+    // Add product to map
+    $product_map['product-' . $key] = array(
+      'file' => $path,
+      'price' => $price,
+      'quantity' => $quantity
+    );
+
+    // Add product to cart
+    WC()->cart->add_to_cart($product_id, $quantity);
+    $product_ids[] = $product_id;
+  }
+
+  $response['message'] = 'Products created successfully';
+
+  // Generate cart URL
   $cart_url = wc_get_cart_url();
-  $cart_url = add_query_arg('add-to-cart', $product_id, $cart_url);
-
-  $checkout_url = wc_get_checkout_url();
-  $response['checkout_url'] = $checkout_url;
 
   $response['cart_url'] = $cart_url;
-  $params = $request->get_params();
-
-  $cart = WC()->cart->get_cart();
-  $response['cart'] = $cart;
-
+  $response['product_map'] = $product_map;
   $response['user'] = $user->data->ID;
   $response['params'] = $params;
+  $response['files'] = $files;
   return rest_ensure_response($response);
-}
-
-//woo support
-function check_woo_files()
-{
-  if (defined('WC_ABSPATH')) {
-    // WC 3.6+ - Cart and other frontend functions are not included for REST requests.
-    include_once WC_ABSPATH . 'includes/wc-cart-functions.php';
-    include_once WC_ABSPATH . 'includes/wc-notice-functions.php';
-    include_once WC_ABSPATH . 'includes/wc-template-hooks.php';
-  }
-
-  if (
-    null === WC()->session
-  ) {
-    $session_class = apply_filters('woocommerce_session_handler', 'WC_Session_Handler');
-
-    WC()->session = new $session_class();
-    WC()->session->init();
-  }
-
-  if (
-    null === WC()->customer
-  ) {
-    WC()->customer = new WC_Customer(get_current_user_id(), true);
-  }
-
-  if (
-    null === WC()->cart
-  ) {
-    WC()->cart = new WC_Cart();
-
-    // We need to force a refresh of the cart contents from session here (cart contents are normally refreshed on wp_loaded, which has already happened by this point).
-    WC()->cart->get_cart();
-  }
-
-  return true;
-}
-
-
-//logUser
-function logUser()
-{
-  // $user_id = $this->user->user_id;
-  // $user = get_user_by('id', $user_id);
-  //if not logged in
-  // if (!is_user_logged_in()) {
-  // wp_set_current_user($user_id, $user->user_login);
-  // wp_set_auth_cookie($user_id);
-  // }
-  check_woo_files();
 }
