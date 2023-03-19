@@ -5,6 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const formGroup = document.querySelector(".order-form-group");
   const totalPriceElm = document.getElementById("order-form-total-price");
   const addGroup = document.getElementById("order-form-add");
+  const firstFileInput = document.getElementById("order-form-file-0");
+  const firstFileLabel = document.querySelector(
+    ".form-subscribe-button[for='order-form-file-0']"
+  );
 
   const data = [];
   const loader = "...";
@@ -193,30 +197,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Add file block
     const fileBlock = document.createElement("div");
-    fileBlock.classList.add("order-form-block");
+    fileBlock.classList.add("order-form-block", "order-form-block-file");
+    const formMeta = document.createElement("div");
+    formMeta.classList.add("order-form-label");
+    formMeta.innerHTML = "Fișier";
     const formBlockLabel = document.createElement("label");
-    formBlockLabel.classList.add("order-form-label");
-    formBlockLabel.setAttribute("for", `file-${id}`);
+    formBlockLabel.classList.add("form-subscribe-button");
+    formBlockLabel.setAttribute("for", `order-form-file-${id}`);
     formBlockLabel.innerHTML = "DXF File";
     const formBlockInput = document.createElement("input");
+    formBlockInput.setAttribute("id", `order-form-file-${id}`);
     formBlockInput.classList.add("order-form-file");
     formBlockInput.setAttribute("type", "file");
-    formBlockInput.setAttribute("name", `file-${id}`);
+    formBlockInput.setAttribute("name", `order-form-file-${id}`);
     formBlockInput.setAttribute("required", true);
+    formBlockInput.addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      const fileName = file.name;
+      formBlockLabel.innerHTML = fileName;
+    });
+    fileBlock.appendChild(formMeta);
     fileBlock.appendChild(formBlockLabel);
     fileBlock.appendChild(formBlockInput);
 
     // Add material block
     const materialBlock = document.createElement("div");
-    materialBlock.classList.add("order-form-block");
+    materialBlock.classList.add("order-form-block", "order-form-block-35");
     const materialBlockLabel = document.createElement("label");
     materialBlockLabel.classList.add("order-form-label");
     materialBlockLabel.setAttribute("for", `material-${id}`);
     materialBlockLabel.innerHTML = "Material";
     const materialBlockSelect = document.createElement("select");
-    materialBlockSelect.classList.add("order-form-material");
+    materialBlockSelect.classList.add(
+      "order-form-material",
+      "order-form-select"
+    );
     materialBlockSelect.setAttribute("name", `material-${id}`);
-    materialBlockSelect.setAttribute("required", true);
+    // materialBlockSelect.setAttribute("required", true);
     const materialBlockSelectOption = document.createElement("option");
     materialBlockSelectOption.innerHTML = "Choose file";
     materialBlockSelectOption.setAttribute("value", "");
@@ -226,13 +243,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Add quantity block
     const quantityBlock = document.createElement("div");
-    quantityBlock.classList.add("order-form-block");
+    // quantityBlock.setAttribute("required", true);
+    quantityBlock.classList.add("order-form-block", "order-form-block-10");
     const quantityBlockLabel = document.createElement("label");
     quantityBlockLabel.classList.add("order-form-label");
     quantityBlockLabel.setAttribute("for", `quantity-${id}`);
-    quantityBlockLabel.innerHTML = "Quantity";
+    quantityBlockLabel.innerHTML = "Cantitate";
     const quantityBlockInput = document.createElement("input");
-    quantityBlockInput.classList.add("order-form-quantity");
+    quantityBlockInput.classList.add(
+      "order-form-quantity",
+      "order-form-select"
+    );
     quantityBlockInput.setAttribute("name", `quantity-${id}`);
     quantityBlockInput.setAttribute("type", "number");
     quantityBlockInput.setAttribute("required", true);
@@ -244,7 +265,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Add status block
     const statusBlock = document.createElement("div");
-    statusBlock.classList.add("order-form-block");
+    statusBlock.classList.add("order-form-block-status", "order-form-block-20");
     const statusBlockDimensions = document.createElement("div");
     statusBlockDimensions.classList.add("order-form-dimensions");
     statusBlockDimensions.innerHTML = "-";
@@ -258,12 +279,13 @@ document.addEventListener("DOMContentLoaded", () => {
     newGroup.appendChild(materialBlock);
     newGroup.appendChild(quantityBlock);
     newGroup.appendChild(statusBlock);
-    orderForm.insertBefore(newGroup, totalPriceElm);
+    orderForm.insertBefore(newGroup, addGroup);
     return newGroup;
   };
 
   const addGroupHandler = (event) => {
     event.preventDefault();
+    if (!firstFileInput.files[0]) return;
     prevId++;
     let newGroup = buildBlock(prevId);
     initData(prevId, newGroup);
@@ -276,6 +298,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const init = () => {
     initData(0, formGroup);
     formGroupListener(formGroup, 0);
+    firstFileInput.addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      const fileName = file.name;
+      firstFileLabel.innerHTML = fileName;
+    });
   };
 
   init();
@@ -320,5 +347,5 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // orderForm.reset();
+  orderForm.reset();
 });
