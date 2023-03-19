@@ -6,13 +6,7 @@
   "category": "mos-category",
   "description": "Adds online order form",
   "textdomain": "mos-blocks",
-  "attributes": {
-    "showAuth": {
-      "type": "boolean",
-      "default": true
-    }
-  },
   "editorScript": "file:./index.js",
   "style": "file:./index.css",
-  "script": ["file:./api.js"]
+  "script": "file:./api.js"
 }

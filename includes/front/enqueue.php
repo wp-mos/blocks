@@ -8,7 +8,7 @@ function mos_enqueue_scripts(): void
   ]);
 
   wp_add_inline_script(
-    'mos-blocks-formular-comanda-script',
+    'mos-blocks-order-form-script',
     "const settings = {$authURLs};",
     'before'
   );

@@ -36,11 +36,13 @@ add_filter('block_categories_all', 'mos_register_category');
 add_filter('upload_mimes', 'allow_dfx_files_mime');
 
 // Hooks
+add_action('rest_api_init', 'mos_rest_api_init');
 add_action('init', 'mos_register_blocks');
+
 add_action('wp_enqueue_scripts', 'mos_enqueue_scripts');
 add_action('admin_init', 'mos_redirect_subscribers_to_frontend');
 add_action('wp_loaded', 'mos_hide_admin_bar');
+
 add_action('template_redirect', 'mos_redirect_if_not_logged_in');
 add_action('template_redirect', 'mos_redirect_if_logged_in');
 add_action('template_redirect', 'mos_redirects');
-add_action('rest_api_init', 'mos_rest_api_init');
