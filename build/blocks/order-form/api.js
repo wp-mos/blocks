@@ -9,8 +9,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const formGroup = document.querySelector(".order-form-group");
   const totalPriceElm = document.getElementById("order-form-total-price");
   const addGroup = document.getElementById("order-form-add");
+  const beforeGroup = document.querySelector(".order-form-add-group");
   const firstFileInput = document.getElementById("order-form-file-0");
   const firstFileLabel = document.querySelector(".form-subscribe-button[for='order-form-file-0']");
+  const closeIcon = `
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 18L18 6" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M18 18L6 6" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  `;
   const data = [];
   const loader = "...";
   let prevId = 0;
@@ -175,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
     formMeta.classList.add("order-form-label");
     formMeta.innerHTML = "Fișier";
     const formBlockLabel = document.createElement("label");
-    formBlockLabel.classList.add("form-subscribe-button");
+    formBlockLabel.classList.add("form-subscribe-button", "form-subscribe-button-secondary");
     formBlockLabel.setAttribute("for", `order-form-file-${id}`);
     formBlockLabel.innerHTML = "DXF File";
     const formBlockInput = document.createElement("input");
@@ -241,15 +248,31 @@ document.addEventListener("DOMContentLoaded", () => {
     statusBlockPrice.innerHTML = "-";
     statusBlock.appendChild(statusBlockDimensions);
     statusBlock.appendChild(statusBlockPrice);
+
+    // Close button
+    const closeButtonBlock = document.createElement("div");
+    closeButtonBlock.classList.add("order-form-close");
+    const closeButton = document.createElement("button");
+    closeButton.dataset.id = `${id}`;
+    closeButton.classList.add("order-form-close-button");
+    closeButton.setAttribute("type", "button");
+    closeButton.innerHTML = closeIcon;
+    closeButtonBlock.appendChild(closeButton);
     newGroup.appendChild(fileBlock);
     newGroup.appendChild(materialBlock);
     newGroup.appendChild(quantityBlock);
     newGroup.appendChild(statusBlock);
-    orderForm.insertBefore(newGroup, addGroup);
+    newGroup.appendChild(closeButtonBlock);
+    orderForm.insertBefore(newGroup, beforeGroup);
+    closeButton.addEventListener("click", event => {
+      data[event.currentTarget.dataset.id] = null;
+      formGroup.parentNode.removeChild(newGroup);
+      // getResult(id);
+    });
+
     return newGroup;
   };
-  const addGroupHandler = event => {
-    event.preventDefault();
+  const addGroupHandler = () => {
     if (!firstFileInput.files[0]) return;
     prevId++;
     let newGroup = buildBlock(prevId);
@@ -258,7 +281,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // Add new group
-  addGroup.addEventListener("click", addGroupHandler);
+  addGroup.addEventListener("click", () => addGroupHandler());
   const init = () => {
     initData(0, formGroup);
     formGroupListener(formGroup, 0);
@@ -271,19 +294,9 @@ document.addEventListener("DOMContentLoaded", () => {
   init();
   orderForm.addEventListener("submit", async event => {
     event.preventDefault();
-
-    // const formData = new FormData(orderForm);
-    const formData = new FormData();
-
-    // filesData.forEach((data) => {
-    //   formData.append("price", data.productPrice);
-    // });
-
-    formData.append("name", "product name");
+    const formData = new FormData(orderForm);
     formData.append("price", 100);
     formData.append("quantity", 1);
-    formData.append("material", "material name");
-    formData.append("size", "file size");
     try {
       const response = await fetch(settings.root, {
         method: "POST",
