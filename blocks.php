@@ -3,13 +3,12 @@
 /**
  * Plugin Name:       Mos Blocks
  * Theme URI: https: //github.com/wp-mos/blocks
- * Author: the Marius P.
- * Author URI: https: //github.com/wisethee
- * Description:       A plugin for adding blocks to Mos Theme.
+ * Author: Harpoon Team
+ * Author URI: https://harpoon.ro/
+ * Description:       A plugin for custom adding blocks to Mos Theme.
  * Version:           1.0.0
  * Requires at least: 5.9
  * Requires PHP:      7.2
- * Author:            Marius Paduraru
  * Text Domain:       /wp-mos/blocks
  * Domain Path:       /languages
  */
