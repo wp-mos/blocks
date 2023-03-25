@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Listen for form group change
   const formGroupListener = (group, id) => {
     group.addEventListener("change", () => {
-      // getResult(id);
+      getResult(id);
     });
   };
   const updateGroup = id => {
@@ -220,7 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Add quantity block
     const quantityBlock = document.createElement("div");
-    // quantityBlock.setAttribute("required", true);
+    quantityBlock.setAttribute("required", true);
     quantityBlock.classList.add("order-form-block", "order-form-block-10");
     const quantityBlockLabel = document.createElement("label");
     quantityBlockLabel.classList.add("order-form-label");
@@ -267,9 +267,8 @@ document.addEventListener("DOMContentLoaded", () => {
     closeButton.addEventListener("click", event => {
       data[event.currentTarget.dataset.id] = null;
       formGroup.parentNode.removeChild(newGroup);
-      // getResult(id);
+      getResult(id);
     });
-
     return newGroup;
   };
   const addGroupHandler = () => {
